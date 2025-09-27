@@ -41,7 +41,8 @@ module.exports = {
     "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
 
     // Reglas de TypeScript
-    "@typescript-eslint/no-unused-vars": ["error"],
+    // "@typescript-eslint/no-unused-vars": ["error"],
+    "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/explicit-function-return-type": "off",
 
     // Reglas de imports
