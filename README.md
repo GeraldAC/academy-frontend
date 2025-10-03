@@ -23,6 +23,14 @@ export default {
     tsconfigRootDir: __dirname,
   },
 };
+
+  "lint-staged": {
+    "**/*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "npm test -- --bail --findRelatedTests"
+    ],
+    "**/*.{json,md,css,scss}": "prettier --write"
+  },
 ```
 
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
