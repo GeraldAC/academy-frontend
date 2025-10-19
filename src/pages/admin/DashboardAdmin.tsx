@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function DashboardAdmin() {
   const { user, logout } = useAuthStore();
+
   const navigate = useNavigate();
 
   const handleLogout = () => {

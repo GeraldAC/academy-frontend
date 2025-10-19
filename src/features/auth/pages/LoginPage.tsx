@@ -9,6 +9,10 @@ import {
   Link,
   InputGroup,
   InputLeftElement,
+  Container,
+  Heading,
+  Card,
+  CardBody,
 } from "@chakra-ui/react";
 import { MdAlternateEmail, MdLock } from "react-icons/md";
 import { useForm } from "react-hook-form";
@@ -16,6 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useLogin } from "../hooks/useLogin";
 import { LoginFormData, loginFormSchema } from "../validations/validation";
 import { Link as RouterLink } from "react-router-dom";
+import Layout from "@/components/layout/PublicLayout/Layout";
 
 export default function LoginPage() {
   const { mutate, isPending, error } = useLogin();
@@ -30,59 +35,116 @@ export default function LoginPage() {
   const onSubmit = (data: LoginFormData) => mutate(data);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <VStack spacing={4} align="stretch">
-        <FormControl isInvalid={!!errors.email}>
-          <FormLabel>Email</FormLabel>
-          <InputGroup>
-            <InputLeftElement pointerEvents="none">
-              <MdAlternateEmail color="gray.400" />
-            </InputLeftElement>
-            <Input type="email" placeholder="tucorreo@ejemplo.com" {...register("email")} />
-          </InputGroup>
-          <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
-        </FormControl>
+    <Layout showBackButton={true}>
+      <Container maxW="md" py={10}>
+        <VStack spacing={8}>
+          <VStack spacing={4} textAlign="center">
+            <Heading size="xl" color="red.600">
+              Iniciar Sesión
+            </Heading>
+            <Text color="gray.600" fontSize="lg">
+              Accede a tu cuenta del Centro Preuniversitario
+            </Text>
+          </VStack>
 
-        <FormControl isInvalid={!!errors.password}>
-          <FormLabel>Contraseña</FormLabel>
-          <InputGroup>
-            <InputLeftElement pointerEvents="none">
-              <MdLock color="gray.400" />
-            </InputLeftElement>
-            <Input type="password" placeholder="••••••••" {...register("password")} />
-          </InputGroup>
-          <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
-        </FormControl>
+          <Card w="full" shadow="xl" borderRadius="xl" border="1px" borderColor="gray.100">
+            <CardBody p={8}>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <VStack spacing={6} align="stretch">
+                  <FormControl isInvalid={!!errors.email}>
+                    <FormLabel fontWeight="medium" color="gray.700">
+                      Email
+                    </FormLabel>
+                    <InputGroup>
+                      <InputLeftElement pointerEvents="none">
+                        <MdAlternateEmail color="gray.400" />
+                      </InputLeftElement>
+                      <Input
+                        type="email"
+                        placeholder="tucorreo@ejemplo.com"
+                        size="lg"
+                        {...register("email")}
+                        focusBorderColor="red.500"
+                      />
+                    </InputGroup>
+                    <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
+                  </FormControl>
 
-        {error && (
-          <Text color="red.500" fontSize="sm">
-            {(error as Error).message}
-          </Text>
-        )}
+                  <FormControl isInvalid={!!errors.password}>
+                    <FormLabel fontWeight="medium" color="gray.700">
+                      Contraseña
+                    </FormLabel>
+                    <InputGroup>
+                      <InputLeftElement pointerEvents="none">
+                        <MdLock color="gray.400" />
+                      </InputLeftElement>
+                      <Input
+                        type="password"
+                        placeholder="••••••••"
+                        size="lg"
+                        {...register("password")}
+                        focusBorderColor="red.500"
+                      />
+                    </InputGroup>
+                    <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
+                  </FormControl>
 
-        <Button
-          type="submit"
-          colorScheme="teal"
-          isLoading={isPending}
-          loadingText="Ingresando..."
-          width="full"
-        >
-          Ingresar
-        </Button>
+                  {error && (
+                    <Text
+                      color="red.500"
+                      fontSize="sm"
+                      textAlign="center"
+                      bg="red.50"
+                      p={2}
+                      borderRadius="md"
+                    >
+                      {(error as Error).message}
+                    </Text>
+                  )}
 
-        <Text fontSize="sm" textAlign="center">
-          <Link as={RouterLink} to="/auth/forgot-password" color="teal.500">
-            ¿Olvidaste tu contraseña?
-          </Link>
-        </Text>
+                  <Button
+                    type="submit"
+                    colorScheme="red"
+                    isLoading={isPending}
+                    loadingText="Ingresando..."
+                    size="lg"
+                    height="50px"
+                    fontSize="md"
+                  >
+                    Ingresar
+                  </Button>
 
-        <Text fontSize="sm" textAlign="center">
-          ¿No tienes cuenta?{" "}
-          <Link as={RouterLink} to="/auth/register" color="teal.500">
-            Regístrate aquí
-          </Link>
-        </Text>
-      </VStack>
-    </form>
+                  <VStack spacing={3} pt={4}>
+                    <Text fontSize="sm" textAlign="center">
+                      <Link
+                        as={RouterLink}
+                        to="/auth/forgot-password"
+                        color="red.500"
+                        _hover={{ color: "red.600" }}
+                      >
+                        ¿Olvidaste tu contraseña?
+                      </Link>
+                    </Text>
+
+                    <Text fontSize="sm" textAlign="center">
+                      ¿Quieres inscribirte en la academia?{" "}
+                      <Link
+                        as={RouterLink}
+                        to="/"
+                        color="red.500"
+                        fontWeight="medium"
+                        _hover={{ color: "red.600" }}
+                      >
+                        Contáctate
+                      </Link>
+                    </Text>
+                  </VStack>
+                </VStack>
+              </form>
+            </CardBody>
+          </Card>
+        </VStack>
+      </Container>
+    </Layout>
   );
 }
