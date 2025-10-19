@@ -10,6 +10,7 @@ const RegisterPage = lazy(() => import("@/features/auth/pages/RegisterPage"));
 const DashboardAdmin = lazy(() => import("@/pages/admin/DashboardAdmin"));
 const TeacherDashboard = lazy(() => import("@/pages/teacher/TeacherDashboard"));
 const StudentDashboard = lazy(() => import("@/pages/student/StudentDashboard"));
+const ProfilePage = lazy(() => import("@/features/users/pages/ProfilePage"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 
 export const routesConfig = [
@@ -33,17 +34,24 @@ export const routesConfig = [
         index: true,
         element: <DashboardAdmin />,
       },
+      { path: "profile", element: <ProfilePage /> },
     ],
   },
   {
     path: "/teacher",
     element: <TeacherLayout />,
-    children: [{ index: true, element: <TeacherDashboard /> }],
+    children: [
+      { index: true, element: <TeacherDashboard /> },
+      { path: "profile", element: <ProfilePage /> },
+    ],
   },
   {
     path: "/student",
     element: <StudentLayout />,
-    children: [{ index: true, element: <StudentDashboard /> }],
+    children: [
+      { index: true, element: <StudentDashboard /> },
+      { path: "profile", element: <ProfilePage /> },
+    ],
   },
   { path: "*", element: <NotFoundPage /> },
 ];
