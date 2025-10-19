@@ -1,15 +1,20 @@
 import { Avatar, Menu, MenuButton, MenuList, MenuItem, MenuDivider } from "@chakra-ui/react";
-
-export const UserMenu = () => (
-  <Menu>
-    <MenuButton>
-      <Avatar size="sm" />
-    </MenuButton>
-    <MenuList>
-      <MenuItem>Perfil</MenuItem>
-      <MenuItem>Configuración</MenuItem>
-      <MenuDivider />
-      <MenuItem>Cerrar sesión</MenuItem>
-    </MenuList>
-  </Menu>
-);
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../../stores/useAuthStore";
+export const UserMenu = () => {
+  const navigate = useNavigate();
+  const logout = useAuthStore((state) => state.logout);
+  return (
+    <Menu>
+      <MenuButton>
+        <Avatar size="sm" />
+      </MenuButton>
+      <MenuList>
+        <MenuItem onClick={() => navigate("/admin/profile")}>Perfil</MenuItem>
+        <MenuItem>Configuración</MenuItem>
+        <MenuDivider />
+        <MenuItem>Cerrar sesión</MenuItem>
+      </MenuList>
+    </Menu>
+  );
+};

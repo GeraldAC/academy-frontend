@@ -7,6 +7,7 @@ const links = [
   { label: "Dashboard", to: "/admin" },
   { label: "Usuarios", to: "/admin/users" },
   { label: "Reportes", to: "/admin/reports" },
+  { label: "Mi Perfil", to: "/admin/profile" },
 ];
 
 export const AdminLayout = () => (
