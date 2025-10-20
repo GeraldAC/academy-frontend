@@ -1,9 +1,9 @@
 import { Avatar, Menu, MenuButton, MenuList, MenuItem, MenuDivider } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../../stores/useAuthStore";
+
 export const UserMenu = () => {
   const navigate = useNavigate();
-  const logout = useAuthStore((state) => state.logout);
+
   return (
     <Menu>
       <MenuButton>

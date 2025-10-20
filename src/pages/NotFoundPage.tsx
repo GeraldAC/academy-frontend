@@ -15,7 +15,7 @@ import {
 import { Link as RouterLink } from "react-router-dom";
 import { MdHome, MdSupport, MdArrowBack } from "react-icons/md";
 import { FaCompass, FaGlobeAmericas, FaRocket } from "react-icons/fa";
-import Layout from "@/components/layout/PublicLayout/Layout";
+import Layout from "@/components/layout/PublicLayout/PublicLayout";
 
 // Animations
 const float = keyframes`

@@ -17,7 +17,6 @@ import {
 
 import { useNavigate } from "react-router-dom";
 import { FaGithub, FaLinkedin, FaUniversity, FaUsers, FaRocket } from "react-icons/fa";
-import Layout from "@/components/layout/PublicLayout/Layout";
 
 const AboutPage = () => {
   const navigate = useNavigate();
@@ -79,7 +78,7 @@ const AboutPage = () => {
   ];
 
   return (
-    <Layout showBackButton={true} showTeamFooter={true}>
+    <Box>
       {/* Hero Section */}
       <Container maxW="container.xl" py={16}>
         <VStack spacing={8} textAlign="center">
@@ -329,7 +328,7 @@ const AboutPage = () => {
           </VStack>
         </Container>
       </Box>
-    </Layout>
+    </Box>
   );
 };
 

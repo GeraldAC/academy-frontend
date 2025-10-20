@@ -13,6 +13,7 @@ import {
   Heading,
   Card,
   CardBody,
+  Box,
 } from "@chakra-ui/react";
 import { MdAlternateEmail, MdLock } from "react-icons/md";
 import { useForm } from "react-hook-form";
@@ -20,7 +21,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useLogin } from "../hooks/useLogin";
 import { LoginFormData, loginFormSchema } from "../validations/validation";
 import { Link as RouterLink } from "react-router-dom";
-import Layout from "@/components/layout/PublicLayout/Layout";
 
 export default function LoginPage() {
   const { mutate, isPending, error } = useLogin();
@@ -35,7 +35,7 @@ export default function LoginPage() {
   const onSubmit = (data: LoginFormData) => mutate(data);
 
   return (
-    <Layout showBackButton={true}>
+    <Box>
       <Container maxW="md" py={10}>
         <VStack spacing={8}>
           <VStack spacing={4} textAlign="center">
@@ -145,6 +145,6 @@ export default function LoginPage() {
           </Card>
         </VStack>
       </Container>
-    </Layout>
+    </Box>
   );
 }

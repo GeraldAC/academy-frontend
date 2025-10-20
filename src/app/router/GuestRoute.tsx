@@ -1,17 +1,15 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Spinner, Box } from "@chakra-ui/react";
 
-interface ProtectedRouteProps {
+interface GuestRouteProps {
   children: React.ReactNode;
-  requiredRole?: "ADMIN" | "TEACHER" | "STUDENT";
 }
 
-export const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
+export const GuestRoute = ({ children }: GuestRouteProps) => {
   const { isAuthenticated, user, isInitialized } = useAuthStore();
-  const location = useLocation();
 
-  // Esperar a que se inicialice la autenticación
+  // Esperar a que se inicialice
   if (!isInitialized) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minH="100vh">
@@ -20,13 +18,8 @@ export const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) 
     );
   }
 
-  // Si no está autenticado, redirigir a login
-  if (!isAuthenticated || !user) {
-    return <Navigate to="/auth/login" state={{ from: location }} replace />;
-  }
-
-  // Si hay un rol requerido y el usuario no lo tiene, redirigir a su dashboard
-  if (requiredRole && user.role !== requiredRole) {
+  // Si está autenticado, redirigir a su dashboard según el rol
+  if (isAuthenticated && user) {
     switch (user.role) {
       case "ADMIN":
         return <Navigate to="/admin" replace />;
@@ -39,6 +32,6 @@ export const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) 
     }
   }
 
-  // Usuario autenticado con el rol correcto
+  // Usuario no autenticado puede acceder
   return <>{children}</>;
 };
