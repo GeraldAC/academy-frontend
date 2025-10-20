@@ -12,6 +12,7 @@ interface AuthState {
   initializeAuth: () => Promise<void>;
 }
 
+// Helpers locales
 const clearStorage = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
@@ -29,26 +30,32 @@ const loadFromStorage = (): { user: AuthUser | null; token: string | null } => {
   }
 };
 
+// Store Zustand
 export const useAuthStore = create<AuthState>((set, get) => {
   const { user, token } = loadFromStorage();
 
-  // Auto-inicializar al crear el store
   const initializeAuth = async () => {
-    const { token, user, isInitialized } = get();
+    const state = get();
 
-    // Si ya se inicializó, no hacer nada
-    if (isInitialized) return;
+    // Evitar múltiples inicializaciones
+    if (state.isInitialized) return;
 
-    // Si no hay token o user en storage, marcar como inicializado
-    if (!token || !user) {
+    // Si no hay token ni user almacenado → marcar como no autenticado
+    if (!state.token || !state.user) {
       set({ isInitialized: true, isAuthenticated: false });
       return;
     }
 
     try {
+      // Verifica el token con el backend
       const isValid = await verifyTokenService();
 
-      if (!isValid) {
+      if (isValid) {
+        set({
+          isAuthenticated: true,
+          isInitialized: true,
+        });
+      } else {
         clearStorage();
         set({
           user: null,
@@ -56,8 +63,6 @@ export const useAuthStore = create<AuthState>((set, get) => {
           isAuthenticated: false,
           isInitialized: true,
         });
-      } else {
-        set({ isAuthenticated: true, isInitialized: true });
       }
     } catch (error) {
       console.error("Error initializing auth:", error);
@@ -71,16 +76,12 @@ export const useAuthStore = create<AuthState>((set, get) => {
     }
   };
 
-  // Inicializar automáticamente si hay token
-  if (token && user) {
-    initializeAuth();
-  }
-
+  // Retor el estado inicial del store
   return {
     user,
     token,
     isAuthenticated: !!user && !!token,
-    isInitialized: !token || !user, // Si no hay token, ya está inicializado
+    isInitialized: false, // Siempre parte en "no inicializado"
 
     login: (user, token) => {
       localStorage.setItem("token", token);

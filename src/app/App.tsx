@@ -3,7 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import { AppRouter } from "./router/router";
 import { ChakraProvider } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { SuspenseFallback } from "./router/SuspenseFallback";
+import { LoadingScreen } from "../components/ui/LoadingScreen";
 import { useAuthSync } from "@/hooks/useAuthSync";
 import { useAuthCheck } from "@/hooks/useAuthCheck";
 
@@ -17,14 +17,14 @@ const queryClient = new QueryClient({
 });
 
 function AppContent() {
-  // Asegurar que la autenticación esté inicializada
+  // Inicializar autenticación
   useAuthCheck();
 
   // Sincronizar autenticación entre pestañas
   useAuthSync();
 
   return (
-    <Suspense fallback={<SuspenseFallback />}>
+    <Suspense fallback={<LoadingScreen />}>
       <AppRouter />
     </Suspense>
   );

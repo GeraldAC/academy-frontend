@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { Spinner, Box } from "@chakra-ui/react";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 
 interface GuestRouteProps {
   children: React.ReactNode;
@@ -11,11 +11,7 @@ export const GuestRoute = ({ children }: GuestRouteProps) => {
 
   // Esperar a que se inicialice
   if (!isInitialized) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" minH="100vh">
-        <Spinner size="xl" />
-      </Box>
-    );
+    return <LoadingScreen />;
   }
 
   // Si está autenticado, redirigir a su dashboard según el rol

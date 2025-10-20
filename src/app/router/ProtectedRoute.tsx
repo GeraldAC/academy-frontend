@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { Spinner, Box } from "@chakra-ui/react";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -13,11 +13,7 @@ export const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) 
 
   // Esperar a que se inicialice la autenticación
   if (!isInitialized) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" minH="100vh">
-        <Spinner size="xl" />
-      </Box>
-    );
+    return <LoadingScreen />;
   }
 
   // Si no está autenticado, redirigir a login
