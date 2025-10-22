@@ -8,7 +8,11 @@ interface LayoutProps {
   showTeamFooter?: boolean;
 }
 
-const Layout = ({ children, showBackButton = false, showTeamFooter = false }: LayoutProps) => {
+export const PublicLayout = ({
+  children,
+  showBackButton = false,
+  showTeamFooter = false,
+}: LayoutProps) => {
   return (
     <Box minH="100vh" display="flex" flexDirection="column">
       <Header showBackButton={showBackButton} />
@@ -19,5 +23,3 @@ const Layout = ({ children, showBackButton = false, showTeamFooter = false }: La
     </Box>
   );
 };
-
-export default Layout;

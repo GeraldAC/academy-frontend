@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { FaGraduationCap, FaUsers, FaChartLine } from "react-icons/fa";
-import Layout from "@/components/layout/PublicLayout/Layout";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -41,7 +40,7 @@ const LandingPage = () => {
   ];
 
   return (
-    <Layout>
+    <Box>
       {/* Hero Section */}
       <Container maxW="container.xl" py={20}>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10} alignItems="center">
@@ -160,7 +159,7 @@ const LandingPage = () => {
           </Box>
         </Container>
       </Box>
-    </Layout>
+    </Box>
   );
 };
 

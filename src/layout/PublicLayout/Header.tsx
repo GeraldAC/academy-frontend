@@ -8,11 +8,16 @@ import {
   HStack,
   Button,
   Image,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Avatar,
 } from "@chakra-ui/react";
-
-import { FaLock, FaInfoCircle } from "react-icons/fa";
-import { FaChevronUp, FaArrowLeft } from "react-icons/fa";
+import { FaLock, FaInfoCircle, FaChevronUp, FaArrowLeft, FaChevronDown } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { roleRedirect } from "@/app/router/roleRedirect";
 
 interface HeaderProps {
   showBackButton?: boolean;
@@ -21,12 +26,28 @@ interface HeaderProps {
 const Header = ({ showBackButton = false }: HeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAuthenticated, user, logout } = useAuthStore();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const isActiveRoute = (path: string) => location.pathname === path;
+
+  const handleLoginClick = () => {
+    if (isAuthenticated && user) {
+      // Si está autenticado, ir a su dashboard
+      roleRedirect(user.role, navigate);
+    } else {
+      // Si no está autenticado, ir a login
+      navigate("/auth/login");
+    }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <Box as="header" bg="white" shadow="sm" py={4} position="sticky" top={0} zIndex={10}>
@@ -43,7 +64,7 @@ const Header = ({ showBackButton = false }: HeaderProps) => {
               justifyContent="center"
             >
               <Image
-                src="../../public/OnlySymbolRec.png"
+                src="/OnlySymbolRec.png"
                 alt="El Gran Andino Logo"
                 h="40px"
                 w="auto"
@@ -81,14 +102,35 @@ const Header = ({ showBackButton = false }: HeaderProps) => {
               Inicio
             </Button>
 
-            <Button
-              leftIcon={<FaLock />}
-              colorScheme="red"
-              variant={isActiveRoute("/auth/login") ? "solid" : "outline"}
-              onClick={() => navigate("/auth/login")}
-            >
-              Login
-            </Button>
+            {/* Botón de Login o Dashboard según autenticación */}
+            {isAuthenticated && user ? (
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  colorScheme="red"
+                  variant="solid"
+                  rightIcon={<FaChevronDown />}
+                >
+                  <HStack spacing={2}>
+                    <Avatar size="xs" name={`${user.firstName} ${user.lastName}`} />
+                    <Text>{user.firstName}</Text>
+                  </HStack>
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={handleLoginClick}>Ir a mi Dashboard</MenuItem>
+                  <MenuItem onClick={handleLogout}>Cerrar Sesión</MenuItem>
+                </MenuList>
+              </Menu>
+            ) : (
+              <Button
+                leftIcon={<FaLock />}
+                colorScheme="red"
+                variant={isActiveRoute("/auth/login") ? "solid" : "outline"}
+                onClick={handleLoginClick}
+              >
+                Iniciar Sesión
+              </Button>
+            )}
 
             <Button
               leftIcon={<FaInfoCircle />}

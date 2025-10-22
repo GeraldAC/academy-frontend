@@ -1,4 +1,4 @@
-import { Box, Heading, VStack, useToast, Spinner, Text, Alert, AlertIcon } from "@chakra-ui/react";
+import { Box, Heading, VStack, useToast, Alert, AlertIcon } from "@chakra-ui/react";
 import { ProfileForm } from "../components/ProfileForm";
 import { PasswordForm } from "../components/PasswordForm";
 import { useUpdateProfile } from "../hooks/useUpdateProfile";
@@ -6,6 +6,7 @@ import { useUpdatePassword } from "../hooks/useUpdatePassword";
 import { useAuthStore } from "@/stores/useAuthStore";
 import type { UpdateProfileFormData } from "../validations/validation";
 import type { UpdatePasswordFormData } from "../validations/validation";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 
 export default function ProfilePage() {
   const user = useAuthStore((state) => state.user);
@@ -82,12 +83,7 @@ export default function ProfilePage() {
 
   // Loading state
   if (!user) {
-    return (
-      <Box p={8} textAlign="center">
-        <Spinner size="xl" />
-        <Text mt={4}>Cargando perfil...</Text>
-      </Box>
-    );
+    return <LoadingScreen />;
   }
 
   return (

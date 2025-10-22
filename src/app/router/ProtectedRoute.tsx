@@ -1,16 +1,40 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 
-type Props = { roles?: string[] };
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  requiredRole?: "ADMIN" | "TEACHER" | "STUDENT";
+}
 
-export function ProtectedRoute({ roles }: Props) {
-  const { isAuthenticated, user } = useAuthStore();
+export const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
+  const { isAuthenticated, user, isInitialized } = useAuthStore();
+  const location = useLocation();
 
-  if (!isAuthenticated) return <Navigate to="/auth/login" replace />;
-
-  if (roles && user && !roles.includes(user.role)) {
-    return <Navigate to="/not-authorized" replace />;
+  // Esperar a que se inicialice la autenticación
+  if (!isInitialized) {
+    return <LoadingScreen />;
   }
 
-  return <Outlet />;
-}
+  // Si no está autenticado, redirigir a login
+  if (!isAuthenticated || !user) {
+    return <Navigate to="/auth/login" state={{ from: location }} replace />;
+  }
+
+  // Si hay un rol requerido y el usuario no lo tiene, redirigir a su dashboard
+  if (requiredRole && user.role !== requiredRole) {
+    switch (user.role) {
+      case "ADMIN":
+        return <Navigate to="/admin" replace />;
+      case "TEACHER":
+        return <Navigate to="/teacher" replace />;
+      case "STUDENT":
+        return <Navigate to="/student" replace />;
+      default:
+        return <Navigate to="/" replace />;
+    }
+  }
+
+  // Usuario autenticado con el rol correcto
+  return <>{children}</>;
+};
