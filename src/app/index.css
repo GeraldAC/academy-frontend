@@ -2,4 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Aquí puedes agregar tus estilos personalizados debajo */
+/* 🎨 Paleta: Rojo, negro, amarillo, grises y blanco */
+/* Modo claro único */
+
+@layer base {
+  :root {
+    --background: 0 0% 100%; /* blanco */
+    --foreground: 0 0% 5%; /* casi negro */
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+
+    --primary: 0 80% 45%; /* rojo intenso */
+    --primary-foreground: 0 0% 100%; /* blanco */
+
+    --secondary: 0 0% 20%; /* negro suave */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 94%; /* gris muy claro */
+    --muted-foreground: 0 0% 40%; /* gris medio */
+
+    --accent: 50 100% 50%; /* amarillo */
+    --accent-foreground: 0 0% 15%; /* gris oscuro para contraste */
+
+    --destructive: 0 70% 50%; /* rojo alerta */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 85%; /* gris suave */
+    --input: 0 0% 85%;
+    --ring: 0 0% 15%; /* negro/gris oscuro */
+
+    --radius: 0.5rem;
+
+    /* Paleta auxiliar para gráficos o variaciones */
+    --chart-1: 0 70% 50%; /* rojo */
+    --chart-2: 50 100% 50%; /* amarillo */
+    --chart-3: 0 0% 30%; /* gris oscuro */
+    --chart-4: 0 0% 70%; /* gris medio */
+    --chart-5: 0 0% 90%; /* gris claro */
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+  }
+}
