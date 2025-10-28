@@ -22,6 +22,9 @@ const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 // Admin Pages
 const AdminDashboard = lazy(() => import("@/pages/admin/DashboardPage"));
 // const AdminProfile = lazy(() => import("@/pages/admin/ProfilePage"));
+const CoursesListPage = lazy(() => import("@/features/courses/pages/CoursesListPage"));
+const CreateCoursePage = lazy(() => import("@/features/courses/pages/CreateCoursePage"));
+const EditCoursePage = lazy(() => import("@/features/courses/pages/EditCoursePage"));
 
 // Teacher Pages
 const TeacherDashboard = lazy(() => import("@/pages/teacher/DashboardPage"));
@@ -98,11 +101,15 @@ export const routesConfig = [
       // Cursos
       {
         path: "courses",
-        element: <PlaceholderPage title="Lista de Cursos" />,
+        element: <CoursesListPage />,
       },
       {
         path: "courses/create",
-        element: <PlaceholderPage title="Crear Curso" />,
+        element: <CreateCoursePage />,
+      },
+      {
+        path: "courses/edit/:id",
+        element: <EditCoursePage />,
       },
       {
         path: "courses/schedules",
