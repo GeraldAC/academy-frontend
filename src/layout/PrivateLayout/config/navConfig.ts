@@ -32,9 +32,9 @@ export const adminNavItems: NavItem[] = [
     label: "Usuarios",
     icon: FiUsers,
     children: [
-      { label: "Lista de Usuarios", path: "/admin/users" },
-      { label: "Crear Usuario", path: "/admin/users/create" },
-      { label: "Perfil de Usuario", path: "/admin/users/profile" },
+      { label: "Lista de Usuarios", path: "/admin/usuarios" },
+      { label: "Crear Usuario", path: "/admin/usuarios/crear" },
+      { label: "Perfil de Usuario", path: "/admin/usuarios/perfil" },
     ],
   },
   {

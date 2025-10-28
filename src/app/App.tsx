@@ -7,6 +7,7 @@ import { LoadingScreen } from "../components/ui/LoadingScreen";
 import { useAuthSync } from "@/hooks/useAuthSync";
 import { useAuthCheck } from "@/hooks/useAuthCheck";
 
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -35,6 +36,7 @@ function App() {
     <ChakraProvider>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          
           <AppContent />
         </BrowserRouter>
       </QueryClientProvider>
