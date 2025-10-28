@@ -3,7 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import { AppRouter } from "./router/router";
 import { ChakraProvider } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { LoadingScreen } from "../components/ui/LoadingScreen";
+import { LoadingScreen } from "../components/common/LoadingScreen";
 import { useAuthSync } from "@/hooks/useAuthSync";
 import { useAuthCheck } from "@/hooks/useAuthCheck";
 
