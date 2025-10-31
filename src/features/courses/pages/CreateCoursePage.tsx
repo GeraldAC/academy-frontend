@@ -1,4 +1,13 @@
-import { Box, Spinner, Flex, Text, Alert, AlertIcon, AlertDescription } from "@chakra-ui/react";
+import {
+  Box,
+  Spinner,
+  Flex,
+  Text,
+  Alert,
+  AlertIcon,
+  AlertDescription,
+  Heading,
+} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useCourses } from "../hooks/useCourses";
 import { CourseForm } from "../components/CourseForm";
@@ -24,29 +33,17 @@ const CreateCoursePage = () => {
   if (isLoadingTeachers) {
     return (
       <PageContainer
-        title="Nuevo Curso"
-        breadcrumbs={[
-          { label: "Dashboard", path: "/admin" },
-          { label: "Cursos", path: "/admin/courses" },
-          { label: "Nuevo" },
-        ]}
+        breadcrumbs={[{ label: "Cursos", path: "/admin/courses" }, { label: "Nuevo" }]}
       >
         <Flex justify="center" align="center" minH="400px">
-          <Spinner size="xl" color="blue.500" thickness="4px" />
+          <Spinner size="xl" color="red.500" thickness="4px" />
         </Flex>
       </PageContainer>
     );
   }
 
   return (
-    <PageContainer
-      title="Nuevo Curso"
-      breadcrumbs={[
-        { label: "Dashboard", path: "/admin" },
-        { label: "Cursos", path: "/admin/courses" },
-        { label: "Nuevo" },
-      ]}
-    >
+    <PageContainer breadcrumbs={[{ label: "Cursos", path: "/admin/courses" }, { label: "Nuevo" }]}>
       {!teachers || teachers.length === 0 ? (
         <Alert
           status="warning"
@@ -70,6 +67,9 @@ const CreateCoursePage = () => {
         </Alert>
       ) : (
         <Box bg="white" p={8} borderRadius="lg" boxShadow="md" maxW="900px" mx="auto">
+          <Heading size="lg" color={"gray.800"} mb={2}>
+            Nuevo Curso
+          </Heading>
           <Text color="gray.600" mb={6}>
             Completa la información del nuevo curso. Los campos marcados son obligatorios.
           </Text>

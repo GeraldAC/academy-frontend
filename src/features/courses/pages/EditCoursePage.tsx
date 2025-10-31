@@ -43,12 +43,7 @@ const EditCoursePage = () => {
   if (isLoadingCourse || isLoadingTeachers) {
     return (
       <PageContainer
-        title="Editar Curso"
-        breadcrumbs={[
-          { label: "Dashboard", path: "/admin" },
-          { label: "Cursos", path: "/admin/courses" },
-          { label: "Editar" },
-        ]}
+        breadcrumbs={[{ label: "Cursos", path: "/admin/courses" }, { label: "Editar" }]}
       >
         <Flex justify="center" align="center" minH="400px">
           <Spinner size="xl" color="blue.500" thickness="4px" />
@@ -60,12 +55,7 @@ const EditCoursePage = () => {
   if (error || !course) {
     return (
       <PageContainer
-        title="Editar Curso"
-        breadcrumbs={[
-          { label: "Dashboard", path: "/admin" },
-          { label: "Cursos", path: "/admin/courses" },
-          { label: "Editar" },
-        ]}
+        breadcrumbs={[{ label: "Cursos", path: "/admin/courses" }, { label: "Editar" }]}
       >
         <Alert
           status="error"
@@ -99,11 +89,7 @@ const EditCoursePage = () => {
     return (
       <PageContainer
         title={`Editar: ${course.name}`}
-        breadcrumbs={[
-          { label: "Dashboard", path: "/admin" },
-          { label: "Cursos", path: "/admin/courses" },
-          { label: "Editar" },
-        ]}
+        breadcrumbs={[{ label: "Cursos", path: "/admin/courses" }, { label: "Editar" }]}
       >
         <Alert
           status="warning"
@@ -130,9 +116,9 @@ const EditCoursePage = () => {
   }
 
   return (
-    <PageContainer
-      title={
-        <Flex align="center" gap={3}>
+    <PageContainer breadcrumbs={[{ label: "Cursos", path: "/admin/courses" }, { label: "Editar" }]}>
+      <Box bg="white" p={8} borderRadius="lg" boxShadow="md" maxW="900px" mx="auto">
+        <Flex align="center" gap={3} mb={6}>
           <Heading size="lg" color={"gray.800"}>
             Editar: {course.name}
           </Heading>
@@ -146,14 +132,6 @@ const EditCoursePage = () => {
             {course.isActive ? "Activo" : "Inactivo"}
           </Badge>
         </Flex>
-      }
-      breadcrumbs={[
-        { label: "Dashboard", path: "/admin" },
-        { label: "Cursos", path: "/admin/courses" },
-        { label: "Editar" },
-      ]}
-    >
-      <Box bg="white" p={8} borderRadius="lg" boxShadow="md" maxW="900px" mx="auto">
         <Flex mb={6} p={4} bg="blue.50" borderRadius="md" border="1px" borderColor="blue.200">
           <Box>
             <Text fontSize="sm" fontWeight="semibold" color="blue.800" mb={1}>

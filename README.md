@@ -80,3 +80,10 @@ Este proyecto sigue el estándar [Conventional Commits](https://www.conventional
 ### [>] Recomendación
 
 Usa `npx cz` para realizar commits guiados con formato convencional.
+
+Hay 2 detalles al momento de ingresar caracteres en el input de busqueda que quiero ajustar:
+
+-
+- Evitar bloquear el input de busqueda, para que sea más fluida la busqueda.
+- Mantener el foco en el input mientras el usuario ingresa carácteres.
+  Es posbile mejorar lo porfavor?

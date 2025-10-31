@@ -1,4 +1,3 @@
-// src/features/courses/components/CapacityBadge.tsx
 import { Badge, Flex, Text } from "@chakra-ui/react";
 
 interface CapacityBadgeProps {

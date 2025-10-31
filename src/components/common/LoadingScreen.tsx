@@ -16,20 +16,25 @@ const rotateCounterClockwise = emotionKeyframes`
 
 // Desvanecimiento y aparición
 const fadeInOut = emotionKeyframes`
-  0%, 100% { opacity: 0.3; }
+  0%, 100% { opacity: 1; }
   50% { opacity: 1; }
 `;
 
 export const LoadingScreen: React.FC = () => {
   const bg = useColorModeValue("white", "gray.900");
   const redColor = useColorModeValue("red.500", "red.400");
-  const yellowColor = useColorModeValue("yellow.400", "yellow.300");
-  const grayColor = useColorModeValue("gray.300", "gray.600");
+  const yellowColor = useColorModeValue("gray.900", "yellow.300");
+  const grayColor = useColorModeValue("gray.400", "gray.600");
 
   return (
-    <Center h="100vh" w="100%" bg={bg}>
+    <Center
+      w="100%"
+      h="100%" // 🔹 Ocupará todo el espacio disponible del contenedor padre
+      bg={bg}
+      flex="1" // 🔹 Esto ayuda en layouts flex (como el dashboard)
+    >
       <Box position="relative" w="100px" h="100px">
-        {/* Spinner exterior - Rotación antihoraria lenta + fade */}
+        {/* Spinner exterior */}
         <Box
           position="absolute"
           top="0"
@@ -43,7 +48,7 @@ export const LoadingScreen: React.FC = () => {
           animation={`${rotateCounterClockwise} 2s linear infinite, ${fadeInOut} 3s ease-in-out infinite`}
         />
 
-        {/* Spinner medio - Rotación horaria rápida */}
+        {/* Spinner medio */}
         <Box
           position="absolute"
           top="15%"
@@ -57,7 +62,7 @@ export const LoadingScreen: React.FC = () => {
           animation={`${rotateClockwise} 1.2s linear infinite`}
         />
 
-        {/* Spinner interior - Rotación antihoraria muy rápida + fade invertido */}
+        {/* Spinner interior */}
         <Box
           position="absolute"
           top="30%"

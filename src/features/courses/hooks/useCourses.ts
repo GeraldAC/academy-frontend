@@ -1,4 +1,3 @@
-// src/features/courses/hooks/useCourses.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { coursesService } from "../services/courses.service";
 import { CreateCourseInput, UpdateCourseInput, CourseFilters } from "../types/courses.types";
@@ -12,6 +11,8 @@ export const useCourses = (filters?: CourseFilters) => {
   const coursesQuery = useQuery({
     queryKey: ["courses", filters],
     queryFn: () => coursesService.getCourses(filters),
+    // Mantener datos previos mientras se revalida
+    placeholderData: (previousData) => previousData,
   });
 
   // Query para obtener docentes activos
@@ -56,7 +57,6 @@ export const useCourses = (filters?: CourseFilters) => {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["courses"] });
 
-      // Mensaje personalizado según la acción
       const message =
         variables.input.isActive === false
           ? "El curso se ha desactivado exitosamente"
@@ -117,6 +117,7 @@ export const useCourses = (filters?: CourseFilters) => {
     courses: coursesQuery.data,
     isLoadingCourses: coursesQuery.isLoading,
     coursesError: coursesQuery.error,
+    coursesQuery,
     teachers: teachersQuery.data,
     isLoadingTeachers: teachersQuery.isLoading,
     subjects: subjectsQuery.data,
@@ -133,7 +134,6 @@ export const useCourses = (filters?: CourseFilters) => {
   };
 };
 
-// Hook para obtener un curso específico
 export const useCourse = (id: string) => {
   return useQuery({
     queryKey: ["courses", id],

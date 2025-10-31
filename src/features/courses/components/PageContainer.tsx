@@ -17,7 +17,7 @@ interface BreadcrumbItem {
 }
 
 interface PageContainerProps {
-  title: ReactNode; // 👈 ahora puede ser texto o JSX
+  title?: ReactNode; // 👈 ahora puede ser texto o JSX
   breadcrumbs?: BreadcrumbItem[];
   actions?: ReactNode;
   children: ReactNode;
@@ -59,10 +59,11 @@ export const PageContainer = ({ title, breadcrumbs, actions, children }: PageCon
       )}
 
       {/* ===== Header con título y acciones ===== */}
+
       <Flex
         justify="space-between"
         align={{ base: "start", md: "center" }}
-        mb={6}
+        mb={4}
         flexDir={{ base: "column", md: "row" }}
         gap={3}
       >
