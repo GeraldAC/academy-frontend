@@ -1,3 +1,4 @@
+// src/app/router/routesConfig.tsx
 import { lazy } from "react";
 
 // Layouts
@@ -21,18 +22,19 @@ const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 
 // Admin Pages
 const AdminDashboard = lazy(() => import("@/pages/admin/DashboardPage"));
-// const AdminProfile = lazy(() => import("@/pages/admin/ProfilePage"));
+
 const CoursesListPage = lazy(() => import("@/features/courses/pages/CoursesListPage"));
 const CreateCoursePage = lazy(() => import("@/features/courses/pages/CreateCoursePage"));
 const EditCoursePage = lazy(() => import("@/features/courses/pages/EditCoursePage"));
 
+const UsersManagementPage = lazy(() => import("@/pages/admin/UsersManagementPage")); // ✅ NUEVA IMPORTACIÓN
+const UserCreatePage = lazy(() => import("@/features/users/pages/UserCreatePage"));
+
 // Teacher Pages
 const TeacherDashboard = lazy(() => import("@/pages/teacher/DashboardPage"));
-// const TeacherProfile = lazy(() => import("@/pages/teacher/ProfilePage"));
 
 // Student Pages
 const StudentDashboard = lazy(() => import("@/pages/student/DashboardPage"));
-// const StudentProfile = lazy(() => import("@/pages/student/ProfilePage"));
 
 // Shared Pages
 const ProfilePage = lazy(() => import("@/features/users/pages/ProfilePage"));
@@ -85,20 +87,20 @@ export const routesConfig = [
         path: "profile",
         element: <ProfilePage />,
       },
-      // Usuarios
+      // ========== 👥 USUARIOS ==========
       {
-        path: "users",
-        element: <PlaceholderPage title="Lista de Usuarios" />,
+        path: "usuarios",
+        element: <UsersManagementPage />, // ✅ REEMPLAZADO
       },
       {
-        path: "users/create",
-        element: <PlaceholderPage title="Crear Usuario" />,
+        path: "usuarios/crear",
+        element: <UserCreatePage />, // Opcional: ya está incluido en UsersManagementPage
       },
       {
-        path: "users/profile",
+        path: "usuarios/perfil",
         element: <PlaceholderPage title="Perfil de Usuario" />,
       },
-      // Cursos
+      // ========== CURSOS ==========
       {
         path: "courses",
         element: <CoursesListPage />,
@@ -115,7 +117,7 @@ export const routesConfig = [
         path: "courses/schedules",
         element: <PlaceholderPage title="Gestión de Horarios" />,
       },
-      // Asistencia
+      // ========== ASISTENCIA ==========
       {
         path: "attendance",
         element: <PlaceholderPage title="Reporte General de Asistencia" />,
@@ -124,7 +126,7 @@ export const routesConfig = [
         path: "attendance/stats",
         element: <PlaceholderPage title="Estadísticas de Asistencia" />,
       },
-      // Pagos
+      // ========== PAGOS ==========
       {
         path: "payments",
         element: <PlaceholderPage title="Lista de Pagos" />,
@@ -137,7 +139,7 @@ export const routesConfig = [
         path: "payments/reports",
         element: <PlaceholderPage title="Reportes Financieros" />,
       },
-      // Reportes
+      // ========== REPORTES ==========
       {
         path: "reports/students",
         element: <PlaceholderPage title="Reportes por Estudiante" />,

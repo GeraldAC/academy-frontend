@@ -12,3 +12,5 @@ export function AppRouter() {
   const routesElement = useRoutes(routesConfig);
   return routesElement;
 }
+
+export default AppRouter;

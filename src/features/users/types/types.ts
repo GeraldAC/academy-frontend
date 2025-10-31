@@ -21,3 +21,21 @@ export interface User {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface CreateUserRequest {
+  username: string;
+  email: string;
+  password: string;
+  role: "ADMIN" | "TEACHER" | "STUDENT";
+  firstName: string;
+  lastName: string;
+  dni?: string;
+  phone?: string;
+}
+
+export interface UsersListResponse {
+  data: User[];
+  total: number;
+  page: number;
+  limit: number;
+}
