@@ -13,7 +13,15 @@ export interface Teacher {
   email: string;
   isActive: boolean;
 }
-
+export interface Schedule {
+  id: string;
+  courseId: string;
+  weekDay: WeekDay;
+  startTime: string;
+  endTime: string;
+  classType: ClassType;
+  isActive: boolean;
+}
 export interface Course {
   id: string;
   name: string;
@@ -25,11 +33,21 @@ export interface Course {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
-  teacher: Teacher;
+  teacher?: Teacher;
+  availableCapacity?: number;
   _count?: {
     enrollments: number;
   };
-  availableCapacity?: number;
+  schedules?: Schedule[];
+}
+
+export type WeekDay = "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY";
+
+export type ClassType = "REGULAR" | "REINFORCEMENT";
+
+export interface MyCoursesResponse {
+  courses: Course[];
+  total: number;
 }
 
 export interface CreateCourseInput {

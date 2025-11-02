@@ -39,6 +39,12 @@ const StudentDashboard = lazy(() => import("@/pages/student/DashboardPage"));
 // Shared Pages
 const ProfilePage = lazy(() => import("@/features/users/pages/ProfilePage"));
 
+// Mis cursos teacher
+const MyCoursesPage = lazy(() => import("@/features/courses/pages/MyCoursesPage"));
+
+// Detalles curso
+const CourseDetailPage = lazy(() => import("@/features/courses/pages/CourseDetailPage"));
+
 export const routesConfig = [
   // Rutas públicas
   {
@@ -175,11 +181,11 @@ export const routesConfig = [
       // Cursos
       {
         path: "courses",
-        element: <PlaceholderPage title="Lista de Cursos Asignados" />,
+        element: <MyCoursesPage />,
       },
       {
-        path: "courses/detail",
-        element: <PlaceholderPage title="Detalle de Curso" />,
+        path: "courses/:id",
+        element: <CourseDetailPage />,
       },
       {
         path: "courses/students",

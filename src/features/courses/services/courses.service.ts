@@ -5,6 +5,7 @@ import {
   UpdateCourseInput,
   CourseFilters,
   AvailableUser,
+  MyCoursesResponse,
 } from "../types/courses.types";
 
 export const coursesService = {
@@ -52,6 +53,11 @@ export const coursesService = {
 
   async getAvailableSubjects(): Promise<string[]> {
     const { data } = await axios.get<string[]>("/courses/subjects/available");
+    return data;
+  },
+  // Obtener mis cursos asignados (como teacher)
+  async getMyCourses(): Promise<MyCoursesResponse> {
+    const { data } = await axios.get<MyCoursesResponse>("/courses/my-courses");
     return data;
   },
 };
