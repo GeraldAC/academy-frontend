@@ -25,7 +25,15 @@ import {
   Tooltip,
   Spinner,
 } from "@chakra-ui/react";
-import { FiEdit, FiTrash2, FiPlus, FiSearch, FiMoreVertical, FiCheckCircle } from "react-icons/fi";
+import {
+  FiEdit,
+  FiTrash2,
+  FiPlus,
+  FiSearch,
+  FiMoreVertical,
+  FiCheckCircle,
+  FiEye,
+} from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useCourses } from "../hooks/useCourses";
 import { useDebounce } from "../hooks/useDebounce";
@@ -337,6 +345,18 @@ const CoursesListPage = () => {
                     </Td>
                     <Td>
                       <Flex gap={1}>
+                        {/* 👁️ NUEVO BOTÓN: Ver detalles y matricular */}
+                        <Tooltip label="Ver detalles y matricular" fontSize="xs">
+                          <IconButton
+                            aria-label="Ver detalles del curso"
+                            icon={<FiEye />}
+                            size="sm"
+                            colorScheme="green"
+                            variant="ghost"
+                            onClick={() => navigate(`/admin/courses/${course.id}`)}
+                          />
+                        </Tooltip>
+
                         <Tooltip label="Editar curso" fontSize="xs">
                           <IconButton
                             aria-label="Editar curso"
