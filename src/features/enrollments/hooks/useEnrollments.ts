@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { enrollmentsService } from "../services/api";
 import { useToast } from "@chakra-ui/react";
-import type { CreateEnrollmentDTO } from "../types/types";
+import type { CreateEnrollmentDTO, UpdateEnrollmentStatusDTO } from "../types/types";
 
 export const useEnrollments = (courseId: string) => {
   const queryClient = useQueryClient();
@@ -27,7 +27,7 @@ export const useEnrollments = (courseId: string) => {
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ["enrollments", courseId] });
       queryClient.invalidateQueries({ queryKey: ["available-students", courseId] });
-      queryClient.invalidateQueries({ queryKey: ["courses"] }); // Actualizar contadores
+      queryClient.invalidateQueries({ queryKey: ["courses"] });
       toast({
         title: "Estudiante matriculado",
         description: response.message || "El estudiante ha sido matriculado exitosamente",
@@ -36,10 +36,11 @@ export const useEnrollments = (courseId: string) => {
         isClosable: true,
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
+      const err = error as { response?: { data?: { message?: string } } };
       toast({
         title: "Error al matricular",
-        description: error.response?.data?.message || "No se pudo matricular al estudiante",
+        description: err.response?.data?.message || "No se pudo matricular al estudiante",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -47,7 +48,40 @@ export const useEnrollments = (courseId: string) => {
     },
   });
 
-  // Mutation para cancelar matrícula
+  //  Mutation para actualizar estado de matrícula
+  const updateStatusMutation = useMutation({
+    mutationFn: ({
+      enrollmentId,
+      status,
+    }: {
+      enrollmentId: string;
+      status: UpdateEnrollmentStatusDTO;
+    }) => enrollmentsService.updateEnrollmentStatus(enrollmentId, status),
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ["enrollments", courseId] });
+      queryClient.invalidateQueries({ queryKey: ["available-students", courseId] });
+      queryClient.invalidateQueries({ queryKey: ["courses"] });
+      toast({
+        title: "Estado actualizado",
+        description: response.message || "El estado de la matrícula ha sido actualizado",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+    onError: (error: Error) => {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast({
+        title: "Error al actualizar estado",
+        description: err.response?.data?.message || "No se pudo actualizar el estado",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    },
+  });
+
+  // Mutation para cancelar matrícula (método antiguo)
   const cancelEnrollmentMutation = useMutation({
     mutationFn: (enrollmentId: string) => enrollmentsService.cancelEnrollment(enrollmentId),
     onSuccess: () => {
@@ -62,10 +96,11 @@ export const useEnrollments = (courseId: string) => {
         isClosable: true,
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
+      const err = error as { response?: { data?: { message?: string } } };
       toast({
         title: "Error al cancelar",
-        description: error.response?.data?.message || "No se pudo cancelar la matrícula",
+        description: err.response?.data?.message || "No se pudo cancelar la matrícula",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -86,6 +121,11 @@ export const useEnrollments = (courseId: string) => {
     createEnrollment: createEnrollmentMutation.mutate,
     isCreating: createEnrollmentMutation.isPending,
 
+    // Actualizar estado
+    updateEnrollmentStatus: updateStatusMutation.mutate,
+    isUpdatingStatus: updateStatusMutation.isPending,
+
+    // Método antiguo de cancelar
     cancelEnrollment: cancelEnrollmentMutation.mutate,
     isCancelling: cancelEnrollmentMutation.isPending,
   };

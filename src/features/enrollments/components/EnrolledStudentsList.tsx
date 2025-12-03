@@ -22,34 +22,66 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
-import { FiTrash2, FiMail, FiPhone } from "react-icons/fi";
+import { FiMail, FiPhone, FiMoreVertical, FiCheckCircle, FiXCircle, FiCheck } from "react-icons/fi";
 import { useEnrollments } from "../hooks/useEnrollments";
 import { useState, useRef } from "react";
-import type { Enrollment } from "../types/types";
+import type { Enrollment, EnrollmentStatus } from "../types/types";
 
 interface EnrolledStudentsListProps {
   courseId: string;
 }
 
 export const EnrolledStudentsList = ({ courseId }: EnrolledStudentsListProps) => {
-  const { enrollments, isLoadingEnrollments, cancelEnrollment, isCancelling } =
+  const { enrollments, isLoadingEnrollments, updateEnrollmentStatus, isUpdatingStatus } =
     useEnrollments(courseId);
 
   const [selectedEnrollment, setSelectedEnrollment] = useState<Enrollment | null>(null);
+  const [newStatus, setNewStatus] = useState<EnrollmentStatus | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
 
-  const handleCancelClick = (enrollment: Enrollment) => {
+  const handleStatusChange = (enrollment: Enrollment, status: EnrollmentStatus) => {
     setSelectedEnrollment(enrollment);
+    setNewStatus(status);
     onOpen();
   };
 
-  const handleConfirmCancel = () => {
-    if (selectedEnrollment) {
-      cancelEnrollment(selectedEnrollment.id);
-      onClose();
+  const handleConfirmStatusChange = () => {
+    if (selectedEnrollment && newStatus) {
+      updateEnrollmentStatus(
+        { enrollmentId: selectedEnrollment.id, status: { status: newStatus } },
+        {
+          onSuccess: () => {
+            onClose();
+            setSelectedEnrollment(null);
+            setNewStatus(null);
+          },
+        }
+      );
     }
+  };
+
+  const getStatusBadge = (status: EnrollmentStatus) => {
+    const config = {
+      ACTIVE: { colorScheme: "green", label: "Activo" },
+      CANCELLED: { colorScheme: "red", label: "Cancelado" },
+      COMPLETED: { colorScheme: "blue", label: "Completado" },
+    };
+    return config[status];
+  };
+
+  const getStatusMessage = (status: EnrollmentStatus) => {
+    const messages = {
+      ACTIVE: "reactivar",
+      CANCELLED: "cancelar",
+      COMPLETED: "marcar como completado",
+    };
+    return messages[status];
   };
 
   if (isLoadingEnrollments) {
@@ -87,71 +119,88 @@ export const EnrolledStudentsList = ({ courseId }: EnrolledStudentsListProps) =>
             </Tr>
           </Thead>
           <Tbody>
-            {enrollments.map((enrollment) => (
-              <Tr key={enrollment.id} _hover={{ bg: "gray.50" }}>
-                <Td fontWeight="medium">
-                  {enrollment.student.firstName} {enrollment.student.lastName}
-                </Td>
-                <Td>{enrollment.student.dni}</Td>
-                <Td>
-                  <Box>
-                    <Tooltip label={enrollment.student.email} fontSize="xs">
-                      <Box display="flex" alignItems="center" gap={1} mb={1}>
-                        <FiMail size={12} />
-                        <Text fontSize="sm" noOfLines={1} maxW="200px">
-                          {enrollment.student.email}
-                        </Text>
-                      </Box>
-                    </Tooltip>
-                    {enrollment.student.phone && (
-                      <Box display="flex" alignItems="center" gap={1}>
-                        <FiPhone size={12} />
-                        <Text fontSize="sm">{enrollment.student.phone}</Text>
-                      </Box>
+            {enrollments.map((enrollment) => {
+              const statusBadge = getStatusBadge(enrollment.status);
+
+              return (
+                <Tr key={enrollment.id} _hover={{ bg: "gray.50" }}>
+                  <Td fontWeight="medium">
+                    {enrollment.student.firstName} {enrollment.student.lastName}
+                  </Td>
+                  <Td>{enrollment.student.dni}</Td>
+                  <Td>
+                    <Box>
+                      <Tooltip label={enrollment.student.email} fontSize="xs">
+                        <Box display="flex" alignItems="center" gap={1} mb={1}>
+                          <FiMail size={12} />
+                          <Text fontSize="sm" noOfLines={1} maxW="200px">
+                            {enrollment.student.email}
+                          </Text>
+                        </Box>
+                      </Tooltip>
+                      {enrollment.student.phone && (
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <FiPhone size={12} />
+                          <Text fontSize="sm">{enrollment.student.phone}</Text>
+                        </Box>
+                      )}
+                    </Box>
+                  </Td>
+                  <Td>
+                    {new Date(enrollment.enrollmentDate).toLocaleDateString("es-PE", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </Td>
+                  <Td>
+                    <Badge colorScheme={statusBadge.colorScheme}>{statusBadge.label}</Badge>
+                  </Td>
+                  <Td>
+                    {enrollment.status !== "COMPLETED" && (
+                      <Menu>
+                        <MenuButton
+                          as={IconButton}
+                          icon={<FiMoreVertical />}
+                          size="sm"
+                          variant="ghost"
+                          aria-label="Opciones"
+                          isDisabled={isUpdatingStatus}
+                        />
+                        <MenuList>
+                          {enrollment.status === "ACTIVE" && (
+                            <>
+                              <MenuItem
+                                icon={<FiCheck />}
+                                onClick={() => handleStatusChange(enrollment, "COMPLETED")}
+                              >
+                                Marcar como completado
+                              </MenuItem>
+                              <MenuItem
+                                icon={<FiXCircle />}
+                                color="red.600"
+                                onClick={() => handleStatusChange(enrollment, "CANCELLED")}
+                              >
+                                Cancelar matrícula
+                              </MenuItem>
+                            </>
+                          )}
+                          {enrollment.status === "CANCELLED" && (
+                            <MenuItem
+                              icon={<FiCheckCircle />}
+                              color="green.600"
+                              onClick={() => handleStatusChange(enrollment, "ACTIVE")}
+                            >
+                              Reactivar matrícula
+                            </MenuItem>
+                          )}
+                        </MenuList>
+                      </Menu>
                     )}
-                  </Box>
-                </Td>
-                <Td>
-                  {new Date(enrollment.enrollmentDate).toLocaleDateString("es-PE", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })}
-                </Td>
-                <Td>
-                  <Badge
-                    colorScheme={
-                      enrollment.status === "ACTIVE"
-                        ? "green"
-                        : enrollment.status === "CANCELLED"
-                          ? "red"
-                          : "gray"
-                    }
-                  >
-                    {enrollment.status === "ACTIVE"
-                      ? "Activo"
-                      : enrollment.status === "CANCELLED"
-                        ? "Cancelado"
-                        : "Completado"}
-                  </Badge>
-                </Td>
-                <Td>
-                  {enrollment.status === "ACTIVE" && (
-                    <Tooltip label="Cancelar matrícula" fontSize="xs">
-                      <IconButton
-                        aria-label="Cancelar matrícula"
-                        icon={<FiTrash2 />}
-                        size="sm"
-                        colorScheme="red"
-                        variant="ghost"
-                        onClick={() => handleCancelClick(enrollment)}
-                        isDisabled={isCancelling}
-                      />
-                    </Tooltip>
-                  )}
-                </Td>
-              </Tr>
-            ))}
+                  </Td>
+                </Tr>
+              );
+            })}
           </Tbody>
         </Table>
       </Box>
@@ -161,28 +210,28 @@ export const EnrolledStudentsList = ({ courseId }: EnrolledStudentsListProps) =>
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Cancelar Matrícula
+              Confirmar cambio de estado
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              ¿Estás seguro de cancelar la matrícula de{" "}
+              ¿Estás seguro de {newStatus && getStatusMessage(newStatus)} la matrícula de{" "}
               <strong>
                 {selectedEnrollment?.student.firstName} {selectedEnrollment?.student.lastName}
               </strong>
-              ? Esta acción no se puede deshacer.
+              ?
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
+              <Button ref={cancelRef} onClick={onClose} isDisabled={isUpdatingStatus}>
                 Cancelar
               </Button>
               <Button
-                colorScheme="red"
-                onClick={handleConfirmCancel}
+                colorScheme={newStatus === "CANCELLED" ? "red" : "blue"}
+                onClick={handleConfirmStatusChange}
                 ml={3}
-                isLoading={isCancelling}
+                isLoading={isUpdatingStatus}
               >
-                Sí, cancelar matrícula
+                Confirmar
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

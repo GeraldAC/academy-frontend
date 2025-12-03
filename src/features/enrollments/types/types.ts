@@ -30,6 +30,11 @@ export interface CreateEnrollmentDTO {
   notes?: string;
 }
 
+// DTO para actualizar estado
+export interface UpdateEnrollmentStatusDTO {
+  status: EnrollmentStatus;
+}
+
 export interface StudentOption {
   id: string;
   firstName: string;
@@ -39,6 +44,7 @@ export interface StudentOption {
 }
 
 export interface EnrollmentResponse {
-  enrollment: Enrollment;
+  enrollment?: Enrollment;
+  data?: Enrollment;
   message: string;
 }

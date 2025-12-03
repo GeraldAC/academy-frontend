@@ -4,6 +4,7 @@ import type {
   EnrollmentResponse,
   Enrollment,
   StudentOption,
+  UpdateEnrollmentStatusDTO,
 } from "../types/types";
 
 export const enrollmentsService = {
@@ -25,7 +26,19 @@ export const enrollmentsService = {
     return data;
   },
 
-  // Cancelar matrícula (ahora usa DELETE en lugar de PATCH)
+  // 🆕 NUEVO: Actualizar estado de matrícula
+  async updateEnrollmentStatus(
+    enrollmentId: string,
+    status: UpdateEnrollmentStatusDTO
+  ): Promise<EnrollmentResponse> {
+    const { data } = await axios.patch<EnrollmentResponse>(
+      `/enrollments/${enrollmentId}/status`,
+      status
+    );
+    return data;
+  },
+
+  // Cancelar matrícula (método antiguo)
   async cancelEnrollment(enrollmentId: string): Promise<void> {
     await axios.delete(`/enrollments/${enrollmentId}`);
   },
