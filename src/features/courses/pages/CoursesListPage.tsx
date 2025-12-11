@@ -321,7 +321,7 @@ const CoursesListPage = () => {
                       </Badge>
                     </Td>
                     <Td color="gray.700">
-                      {course.teacher.firstName} {course.teacher.lastName}
+                      {course.teacher?.firstName} {course.teacher?.lastName}
                     </Td>
                     <Td>
                       <CapacityBadge

@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { 
-  BookOpen, 
-  Users, 
-  Clock, 
-  CheckCircle,
+import React, { useState } from "react";
+import {
+  BookOpen,
+  Users,
+  Clock,
   TrendingUp,
   Calendar,
   MessageSquare,
@@ -13,58 +12,148 @@ import {
   Edit,
   Eye,
   Award,
-  AlertCircle,
   Search,
   Bell,
   Settings,
   Plus,
-  BarChart2
-} from 'lucide-react';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
+  BarChart2,
+} from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
+} from "recharts";
 
 const TeacherDashboard = () => {
-  const [selectedCourse, setSelectedCourse] = useState('all');
+  const [selectedCourse, setSelectedCourse] = useState("all");
 
   // Datos de ejemplo
   const myCourses = [
-    { id: 1, name: 'React Avanzado', students: 145, progress: 76, status: 'active', rating: 4.8 },
-    { id: 2, name: 'JavaScript Moderno', students: 98, progress: 89, status: 'active', rating: 4.7 },
-    { id: 3, name: 'TypeScript Básico', students: 67, progress: 45, status: 'active', rating: 4.9 },
-    { id: 4, name: 'Node.js + Express', students: 123, progress: 92, status: 'completed', rating: 4.6 }
+    { id: 1, name: "React Avanzado", students: 145, progress: 76, status: "active", rating: 4.8 },
+    {
+      id: 2,
+      name: "JavaScript Moderno",
+      students: 98,
+      progress: 89,
+      status: "active",
+      rating: 4.7,
+    },
+    { id: 3, name: "TypeScript Básico", students: 67, progress: 45, status: "active", rating: 4.9 },
+    {
+      id: 4,
+      name: "Node.js + Express",
+      students: 123,
+      progress: 92,
+      status: "completed",
+      rating: 4.6,
+    },
   ];
 
   const studentEngagement = [
-    { week: 'Sem 1', participacion: 85, tareas: 78, asistencia: 92 },
-    { week: 'Sem 2', participacion: 88, tareas: 82, asistencia: 90 },
-    { week: 'Sem 3', participacion: 82, tareas: 85, asistencia: 88 },
-    { week: 'Sem 4', participacion: 90, tareas: 88, asistencia: 94 }
+    { week: "Sem 1", participacion: 85, tareas: 78, asistencia: 92 },
+    { week: "Sem 2", participacion: 88, tareas: 82, asistencia: 90 },
+    { week: "Sem 3", participacion: 82, tareas: 85, asistencia: 88 },
+    { week: "Sem 4", participacion: 90, tareas: 88, asistencia: 94 },
   ];
 
   const performanceData = [
-    { subject: 'Participación', value: 85 },
-    { subject: 'Tareas', value: 78 },
-    { subject: 'Exámenes', value: 82 },
-    { subject: 'Asistencia', value: 92 },
-    { subject: 'Proyectos', value: 88 }
+    { subject: "Participación", value: 85 },
+    { subject: "Tareas", value: 78 },
+    { subject: "Exámenes", value: 82 },
+    { subject: "Asistencia", value: 92 },
+    { subject: "Proyectos", value: 88 },
   ];
 
   const recentSubmissions = [
-    { id: 1, student: 'Ana García', assignment: 'Proyecto Final React', time: '15 min', status: 'pending' },
-    { id: 2, student: 'Carlos Ruiz', assignment: 'Tarea 5: Hooks', time: '1 hora', status: 'pending' },
-    { id: 3, student: 'María López', assignment: 'Quiz TypeScript', time: '2 horas', status: 'reviewed' },
-    { id: 4, student: 'Juan Pérez', assignment: 'Proyecto API REST', time: '3 horas', status: 'pending' }
+    {
+      id: 1,
+      student: "Ana García",
+      assignment: "Proyecto Final React",
+      time: "15 min",
+      status: "pending",
+    },
+    {
+      id: 2,
+      student: "Carlos Ruiz",
+      assignment: "Tarea 5: Hooks",
+      time: "1 hora",
+      status: "pending",
+    },
+    {
+      id: 3,
+      student: "María López",
+      assignment: "Quiz TypeScript",
+      time: "2 horas",
+      status: "reviewed",
+    },
+    {
+      id: 4,
+      student: "Juan Pérez",
+      assignment: "Proyecto API REST",
+      time: "3 horas",
+      status: "pending",
+    },
   ];
 
   const upcomingClasses = [
-    { id: 1, course: 'React Avanzado', topic: 'Redux Toolkit', date: 'Hoy', time: '14:00', students: 45 },
-    { id: 2, course: 'JavaScript Moderno', topic: 'Async/Await', date: 'Mañana', time: '10:00', students: 38 },
-    { id: 3, course: 'TypeScript Básico', topic: 'Interfaces', date: '21 Oct', time: '16:00', students: 28 }
+    {
+      id: 1,
+      course: "React Avanzado",
+      topic: "Redux Toolkit",
+      date: "Hoy",
+      time: "14:00",
+      students: 45,
+    },
+    {
+      id: 2,
+      course: "JavaScript Moderno",
+      topic: "Async/Await",
+      date: "Mañana",
+      time: "10:00",
+      students: 38,
+    },
+    {
+      id: 3,
+      course: "TypeScript Básico",
+      topic: "Interfaces",
+      date: "21 Oct",
+      time: "16:00",
+      students: 28,
+    },
   ];
 
   const messages = [
-    { id: 1, from: 'Ana García', message: '¿Puedo entregar la tarea un día tarde?', time: '10 min', unread: true },
-    { id: 2, from: 'Carlos Ruiz', message: 'Gracias por la retroalimentación', time: '1 hora', unread: false },
-    { id: 3, from: 'Sistema', message: 'Nueva inscripción en React Avanzado', time: '2 horas', unread: true }
+    {
+      id: 1,
+      from: "Ana García",
+      message: "¿Puedo entregar la tarea un día tarde?",
+      time: "10 min",
+      unread: true,
+    },
+    {
+      id: 2,
+      from: "Carlos Ruiz",
+      message: "Gracias por la retroalimentación",
+      time: "1 hora",
+      unread: false,
+    },
+    {
+      id: 3,
+      from: "Sistema",
+      message: "Nueva inscripción en React Avanzado",
+      time: "2 horas",
+      unread: true,
+    },
   ];
 
   interface StatCardProps {
@@ -76,7 +165,14 @@ const TeacherDashboard = () => {
     trend?: string;
   }
 
-  const StatCard: React.FC<StatCardProps> = ({ icon: Icon, title, value, subtitle, color, trend }) => (
+  const StatCard: React.FC<StatCardProps> = ({
+    icon: Icon,
+    title,
+    value,
+    subtitle,
+    color,
+    trend,
+  }) => (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between">
         <div className="flex-1">
@@ -126,7 +222,11 @@ const TeacherDashboard = () => {
                 <Settings className="w-6 h-6 text-gray-600" />
               </button>
               <div className="flex items-center space-x-2">
-                <img src="https://ui-avatars.com/api/?name=Prof+Garcia&background=8b5cf6&color=fff" alt="Teacher" className="w-10 h-10 rounded-full" />
+                <img
+                  src="https://ui-avatars.com/api/?name=Prof+Garcia&background=8b5cf6&color=fff"
+                  alt="Teacher"
+                  className="w-10 h-10 rounded-full"
+                />
                 <div className="text-left">
                   <p className="text-sm font-medium text-gray-900">Prof. García</p>
                   <p className="text-xs text-gray-500">Docente</p>
@@ -154,14 +254,16 @@ const TeacherDashboard = () => {
               Crear Tarea
             </button>
           </div>
-          <select 
+          <select
             value={selectedCourse}
             onChange={(e) => setSelectedCourse(e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
           >
             <option value="all">Todos los cursos</option>
-            {myCourses.map(course => (
-              <option key={course.id} value={course.id}>{course.name}</option>
+            {myCourses.map((course) => (
+              <option key={course.id} value={course.id}>
+                {course.name}
+              </option>
             ))}
           </select>
         </div>
@@ -216,7 +318,12 @@ const TeacherDashboard = () => {
                 <YAxis stroke="#9ca3af" />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="participacion" fill="#8b5cf6" name="Participación" radius={[4, 4, 0, 0]} />
+                <Bar
+                  dataKey="participacion"
+                  fill="#8b5cf6"
+                  name="Participación"
+                  radius={[4, 4, 0, 0]}
+                />
                 <Bar dataKey="tareas" fill="#3b82f6" name="Tareas" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="asistencia" fill="#10b981" name="Asistencia" radius={[4, 4, 0, 0]} />
               </BarChart>
@@ -229,9 +336,15 @@ const TeacherDashboard = () => {
             <ResponsiveContainer width="100%" height={280}>
               <RadarChart data={performanceData}>
                 <PolarGrid stroke="#e5e7eb" />
-                <PolarAngleAxis dataKey="subject" tick={{ fill: '#6b7280', fontSize: 12 }} />
-                <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: '#9ca3af' }} />
-                <Radar name="Promedio" dataKey="value" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.6} />
+                <PolarAngleAxis dataKey="subject" tick={{ fill: "#6b7280", fontSize: 12 }} />
+                <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: "#9ca3af" }} />
+                <Radar
+                  name="Promedio"
+                  dataKey="value"
+                  stroke="#8b5cf6"
+                  fill="#8b5cf6"
+                  fillOpacity={0.6}
+                />
                 <Tooltip />
               </RadarChart>
             </ResponsiveContainer>
@@ -243,13 +356,20 @@ const TeacherDashboard = () => {
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Mis Cursos</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {myCourses.map((course) => (
-              <div key={course.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div
+                key={course.id}
+                className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+              >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
-                    <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
-                      course.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
-                    }`}>
-                      {course.status === 'active' ? 'Activo' : 'Completado'}
+                    <span
+                      className={`inline-block px-2 py-1 rounded text-xs font-medium ${
+                        course.status === "active"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-gray-100 text-gray-700"
+                      }`}
+                    >
+                      {course.status === "active" ? "Activo" : "Completado"}
                     </span>
                   </div>
                   <div className="flex space-x-1">
@@ -298,7 +418,10 @@ const TeacherDashboard = () => {
             </div>
             <div className="space-y-3">
               {upcomingClasses.map((clase) => (
-                <div key={clase.id} className="border border-gray-200 rounded-lg p-3 hover:border-purple-300 transition-colors">
+                <div
+                  key={clase.id}
+                  className="border border-gray-200 rounded-lg p-3 hover:border-purple-300 transition-colors"
+                >
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <h4 className="font-medium text-gray-900 text-sm">{clase.course}</h4>
@@ -332,21 +455,28 @@ const TeacherDashboard = () => {
             </div>
             <div className="space-y-3">
               {recentSubmissions.map((submission) => (
-                <div key={submission.id} className="border border-gray-200 rounded-lg p-3 hover:border-purple-300 transition-colors">
+                <div
+                  key={submission.id}
+                  className="border border-gray-200 rounded-lg p-3 hover:border-purple-300 transition-colors"
+                >
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
                       <h4 className="font-medium text-gray-900 text-sm">{submission.student}</h4>
                       <p className="text-xs text-gray-600 mt-1">{submission.assignment}</p>
                     </div>
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      submission.status === 'pending' ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'
-                    }`}>
-                      {submission.status === 'pending' ? 'Pendiente' : 'Revisado'}
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-medium ${
+                        submission.status === "pending"
+                          ? "bg-orange-100 text-orange-700"
+                          : "bg-green-100 text-green-700"
+                      }`}
+                    >
+                      {submission.status === "pending" ? "Pendiente" : "Revisado"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100">
                     <span className="text-xs text-gray-500">{submission.time}</span>
-                    {submission.status === 'pending' && (
+                    {submission.status === "pending" && (
                       <button className="text-xs text-purple-600 hover:text-purple-700 font-medium">
                         Revisar →
                       </button>
@@ -365,14 +495,17 @@ const TeacherDashboard = () => {
             </div>
             <div className="space-y-3">
               {messages.map((message) => (
-                <div key={message.id} className={`border rounded-lg p-3 transition-colors ${
-                  message.unread ? 'border-purple-200 bg-purple-50' : 'border-gray-200'
-                }`}>
+                <div
+                  key={message.id}
+                  className={`border rounded-lg p-3 transition-colors ${
+                    message.unread ? "border-purple-200 bg-purple-50" : "border-gray-200"
+                  }`}
+                >
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center space-x-2">
-                      <img 
-                        src={`https://ui-avatars.com/api/?name=${message.from}&background=random`} 
-                        alt={message.from} 
+                      <img
+                        src={`https://ui-avatars.com/api/?name=${message.from}&background=random`}
+                        alt={message.from}
                         className="w-8 h-8 rounded-full"
                       />
                       <div>
@@ -380,9 +513,7 @@ const TeacherDashboard = () => {
                         <span className="text-xs text-gray-500">{message.time}</span>
                       </div>
                     </div>
-                    {message.unread && (
-                      <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-                    )}
+                    {message.unread && <span className="w-2 h-2 bg-purple-500 rounded-full"></span>}
                   </div>
                   <p className="text-sm text-gray-700">{message.message}</p>
                 </div>

@@ -140,7 +140,7 @@ const EditCoursePage = () => {
             <Text fontSize="sm" color="gray.600">
               Materia: <strong>{course.subject}</strong> | Docente:{" "}
               <strong>
-                {course.teacher.firstName} {course.teacher.lastName}
+                {course.teacher?.firstName} {course.teacher?.lastName}
               </strong>
             </Text>
           </Box>
