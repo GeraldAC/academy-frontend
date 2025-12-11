@@ -1,12 +1,11 @@
-// src/services/api/usersService.ts
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
 
 // Configurar interceptor para agregar token automáticamente
 axios.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -23,9 +22,9 @@ axios.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Token expirado o inválido
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   }
@@ -39,7 +38,7 @@ export interface User {
   lastName: string;
   fullName: string;
   dni: string;
-  role: 'STUDENT' | 'TEACHER' | 'ADMIN';
+  role: "STUDENT" | "TEACHER" | "ADMIN";
   phone?: string;
   isActive: boolean;
   createdAt: string;
@@ -52,7 +51,7 @@ export interface CreateUserData {
   firstName: string;
   lastName: string;
   dni: string;
-  role: 'STUDENT' | 'TEACHER' | 'ADMIN';
+  role: "STUDENT" | "TEACHER" | "ADMIN";
   phone?: string;
 }
 
@@ -61,12 +60,12 @@ export interface UpdateUserData {
   firstName?: string;
   lastName?: string;
   phone?: string;
-  role?: 'STUDENT' | 'TEACHER' | 'ADMIN';
+  role?: "STUDENT" | "TEACHER" | "ADMIN";
   isActive?: boolean;
 }
 
 export interface UsersFilters {
-  role?: 'STUDENT' | 'TEACHER' | 'ADMIN';
+  role?: "STUDENT" | "TEACHER" | "ADMIN";
   isActive?: boolean;
   search?: string;
   page?: number;
@@ -81,12 +80,12 @@ export const usersService = {
 
   getUsers: async (filters?: UsersFilters) => {
     const params = new URLSearchParams();
-    
-    if (filters?.role) params.append('role', filters.role);
-    if (filters?.isActive !== undefined) params.append('isActive', filters.isActive.toString());
-    if (filters?.search) params.append('search', filters.search);
-    if (filters?.page) params.append('page', filters.page.toString());
-    if (filters?.limit) params.append('limit', filters.limit.toString());
+
+    if (filters?.role) params.append("role", filters.role);
+    if (filters?.isActive !== undefined) params.append("isActive", filters.isActive.toString());
+    if (filters?.search) params.append("search", filters.search);
+    if (filters?.page) params.append("page", filters.page.toString());
+    if (filters?.limit) params.append("limit", filters.limit.toString());
 
     const response = await axios.get(`${API_URL}/users?${params.toString()}`);
     return response.data;
@@ -120,5 +119,5 @@ export const usersService = {
   getUserStats: async () => {
     const response = await axios.get(`${API_URL}/users/stats`);
     return response.data;
-  }
+  },
 };
