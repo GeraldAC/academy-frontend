@@ -1,12 +1,12 @@
 // src/services/api/dashboardService.ts
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
 
 // Interceptor para agregar el token a todas las peticiones
 axios.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -43,7 +43,7 @@ export const dashboardService = {
     getRevenueData: async () => {
       const response = await axios.get(`${API_URL}/admin/dashboard/revenue`);
       return response.data;
-    }
+    },
   },
 
   // Teacher Dashboard
@@ -65,13 +65,15 @@ export const dashboardService = {
       return response.data;
     },
     getUpcomingClasses: async (teacherId: string) => {
-      const response = await axios.get(`${API_URL}/teacher/dashboard/${teacherId}/upcoming-classes`);
+      const response = await axios.get(
+        `${API_URL}/teacher/dashboard/${teacherId}/upcoming-classes`
+      );
       return response.data;
     },
     getMessages: async (teacherId: string) => {
       const response = await axios.get(`${API_URL}/teacher/dashboard/${teacherId}/messages`);
       return response.data;
-    }
+    },
   },
 
   // Student Dashboard
@@ -107,6 +109,6 @@ export const dashboardService = {
     getSkillsData: async (studentId: string) => {
       const response = await axios.get(`${API_URL}/student/dashboard/${studentId}/skills`);
       return response.data;
-    }
-  }
+    },
+  },
 };
