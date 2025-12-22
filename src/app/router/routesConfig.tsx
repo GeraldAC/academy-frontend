@@ -29,6 +29,7 @@ const EditCoursePage = lazy(() => import("@/features/courses/pages/EditCoursePag
 
 const UsersManagementPage = lazy(() => import("@/pages/admin/UsersManagementPage")); // ✅ NUEVA IMPORTACIÓN
 const UserCreatePage = lazy(() => import("@/features/users/pages/UserCreatePage"));
+const ScheduleManagementPage = lazy(() => import("@/pages/admin/ScheduleManagementPage"));
 
 // Teacher Pages
 const TeacherDashboard = lazy(() => import("@/pages/teacher/DashboardPage"));
@@ -128,7 +129,7 @@ export const routesConfig = [
       },
       {
         path: "courses/schedules",
-        element: <PlaceholderPage title="Gestión de Horarios" />,
+        element: <ScheduleManagementPage/>,
       },
       // ========== ASISTENCIA ==========
       {
