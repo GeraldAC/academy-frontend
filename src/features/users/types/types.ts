@@ -1,3 +1,4 @@
+// Tus interfaces existentes...
 export interface UpdateProfileDTO {
   firstName: string;
   lastName: string;
@@ -38,4 +39,54 @@ export interface UsersListResponse {
   total: number;
   page: number;
   limit: number;
+}
+
+
+// ========== HORARIOS (NUEVOS) ==========
+
+export interface Schedule {
+  id: string;
+  courseId: string;
+  teacherId: string;
+  dayOfWeek: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
+  startTime: string;
+  endTime: string;
+  
+  course?: {
+    id: number;
+    name: string;
+    code: string;
+    subject: string;
+  };
+  teacher?: {
+    id: number;
+    firstName: string;
+    lastName: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateScheduleRequest {
+  courseId: string;
+  teacherId: string;
+  dayOfWeek: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
+  startTime: string;
+  endTime: string;
+}
+
+export interface Course {
+  id: number;
+  name: string;
+  code?: string; // Opcional
+  subject?: string; // Agregar esto
+  description?: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SchedulesListResponse {
+  data: Schedule[];
+  total: number;
 }

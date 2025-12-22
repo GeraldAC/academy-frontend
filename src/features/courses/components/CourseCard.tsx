@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { UsersIcon, CalendarIcon, DollarSignIcon, BookOpenIcon } from "lucide-react";
 import type { Course } from "../types/courses.types";
 
