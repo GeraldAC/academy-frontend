@@ -48,6 +48,11 @@ const CourseDetailPage = lazy(() => import("@/features/courses/pages/CourseDetai
 // Matricula curso
 const AdminCourseDetailPage = lazy(() => import("@/features/courses/pages/AdminCourseDetailPage"));
 
+//detalle curso
+const TeacherCourseDetailSelector = lazy(
+  () => import("@/features/courses/pages/TeacherCourseDetailSelector")
+);
+
 export const routesConfig = [
   // Rutas públicas
   {
@@ -193,6 +198,10 @@ export const routesConfig = [
       {
         path: "courses/:id",
         element: <CourseDetailPage />,
+      },
+      {
+        path: "course-detail",
+        element: <TeacherCourseDetailSelector />,
       },
       {
         path: "courses/students",

@@ -90,7 +90,7 @@ export const teacherNavItems: NavItem[] = [
     icon: FiBookOpen,
     children: [
       { label: "Lista de Cursos Asignados", path: "/teacher/courses" },
-      { label: "Detalle de Curso", path: "/teacher/courses/detail" },
+      { label: "Detalle de Curso", path: "/teacher/course-detail" },
       { label: "Estudiantes Inscritos", path: "/teacher/courses/students" },
     ],
   },
