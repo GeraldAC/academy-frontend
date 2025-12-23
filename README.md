@@ -412,65 +412,7 @@ Reportar problemas y sugerir mejoras a través del sistema de issues del reposit
 ## Licencia
 
 Este proyecto es propiedad del Centro Preuniversitario.
-| ---------- | ---------------------------------------- | ----------------------------------------- |
-| `feat` | Nueva funcionalidad | `feat: agregar validación de formularios` |
-| `fix` | Corrección de errores | `fix: corregir error de CORS` |
-| `docs` | Cambios en documentación | `docs: actualizar README` |
-| `style` | Formato y espacios (sin cambios lógicos) | `style: aplicar prettier` |
-| `refactor` | Mejora interna sin cambio funcional | `refactor: simplificar lógica` |
-| `test` | Agregar o modificar pruebas | `test: agregar pruebas unitarias` |
-| `chore` | Tareas menores (dependencias, config) | `chore: actualizar dependencias` |
-| `perf` | Mejoras de rendimiento | `perf: optimizar renderizado` |
-| `ci` | Cambios en integración continua | `ci: agregar GitHub Actions` |
-| `build` | Cambios en el sistema de build | `build: configurar bundler` |
-| `revert` | Revertir commit anterior | `revert: revertir cambio anterior` |
 
-Para commits guiados, ejecuta:
+---
 
-```bash
-npx cz
-```
-
-## Tecnologías principales
-
-- React 18
-- TypeScript
-- Vite
-- TailwindCSS
-- React Router
-- Zustand
-- React Query
-- Axios
-- Zod (validación)
-
-## Testing
-
-Ejecutar pruebas unitarias:
-
-```bash
-npm run test
-```
-
-## Despliegue
-
-El proyecto está configurado para desplegarse en Netlify. Consulta `netlify.toml` para más detalles.
-
-Para construir para producción:
-
-```bash
-npm run build
-npm run preview
-```
-
-## Contribución
-
-Para contribuir al proyecto:
-
-1. Crear una rama con tu funcionalidad (`git checkout -b feature/mi-funcionalidad`)
-2. Realizar commits siguiendo los estándares convencionales
-3. Hacer push a la rama (`git push origin feature/mi-funcionalidad`)
-4. Abrir un Pull Request
-
-## Licencia
-
-Este proyecto está bajo licencia MIT.
+Última actualización: Diciembre 2025
