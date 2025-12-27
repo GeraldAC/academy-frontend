@@ -1,5 +1,6 @@
 // src/app/router/routesConfig.tsx
 import { lazy } from "react";
+import type { RouteObject } from "react-router-dom";
 
 // Layouts
 import { PublicLayout } from "@/layout/PublicLayout";
@@ -22,17 +23,20 @@ const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 
 // Admin Pages
 const AdminDashboard = lazy(() => import("@/pages/admin/DashboardPage"));
-
 const CoursesListPage = lazy(() => import("@/features/courses/pages/CoursesListPage"));
 const CreateCoursePage = lazy(() => import("@/features/courses/pages/CreateCoursePage"));
 const EditCoursePage = lazy(() => import("@/features/courses/pages/EditCoursePage"));
-
-const UsersManagementPage = lazy(() => import("@/pages/admin/UsersManagementPage")); // ✅ NUEVA IMPORTACIÓN
+const UsersManagementPage = lazy(() => import("@/pages/admin/UsersManagementPage"));
 const UserCreatePage = lazy(() => import("@/features/users/pages/UserCreatePage"));
 const ScheduleManagementPage = lazy(() => import("@/pages/admin/ScheduleManagementPage"));
 
 // Teacher Pages
 const TeacherDashboard = lazy(() => import("@/pages/teacher/DashboardPage"));
+const MyCoursesPage = lazy(() => import("@/features/courses/pages/MyCoursesPage"));
+const CourseDetailPage = lazy(() => import("@/features/courses/pages/CourseDetailPage"));
+const TeacherCourseDetailSelector = lazy(
+  () => import("@/features/courses/pages/TeacherCourseDetailSelector")
+);
 
 // Student Pages
 const StudentDashboard = lazy(() => import("@/pages/student/DashboardPage"));
@@ -40,17 +44,18 @@ const StudentDashboard = lazy(() => import("@/pages/student/DashboardPage"));
 // Shared Pages
 const ProfilePage = lazy(() => import("@/features/users/pages/ProfilePage"));
 
-// Mis cursos teacher
-const MyCoursesPage = lazy(() => import("@/features/courses/pages/MyCoursesPage"));
-
-// Detalles curso
-const CourseDetailPage = lazy(() => import("@/features/courses/pages/CourseDetailPage"));
-
-// Matricula curso
+// Admin Course Detail
 const AdminCourseDetailPage = lazy(() => import("@/features/courses/pages/AdminCourseDetailPage"));
 
-export const routesConfig = [
-  // Rutas públicas
+// Attendance Pages
+const AttendanceRecordPage = lazy(() => import("@/features/attendance/pages/AttendanceRecordPage"));
+const AttendanceStudentPage = lazy(
+  () => import("@/features/attendance/pages/AttendanceStudentPage")
+);
+
+// ==================== ROUTES CONFIG ====================
+export const routesConfig: RouteObject[] = [
+  // ========== PUBLIC ROUTES ==========
   {
     path: "/",
     element: (
@@ -67,7 +72,6 @@ export const routesConfig = [
       </PublicLayout>
     ),
   },
-
   // Ruta de login
   {
     path: "/auth/login",
@@ -97,14 +101,14 @@ export const routesConfig = [
         path: "profile",
         element: <ProfilePage />,
       },
-      // ========== 👥 USUARIOS ==========
+      // ========== USUARIOS ==========
       {
         path: "usuarios",
-        element: <UsersManagementPage />, // ✅ REEMPLAZADO
+        element: <UsersManagementPage />,
       },
       {
         path: "usuarios/crear",
-        element: <UserCreatePage />, // Opcional: ya está incluido en UsersManagementPage
+        element: <UserCreatePage />,
       },
       {
         path: "usuarios/perfil",
@@ -129,12 +133,12 @@ export const routesConfig = [
       },
       {
         path: "courses/schedules",
-        element: <ScheduleManagementPage/>,
+        element: <ScheduleManagementPage />,
       },
       // ========== ASISTENCIA ==========
       {
         path: "attendance",
-        element: <PlaceholderPage title="Reporte General de Asistencia" />,
+        element: <AttendanceRecordPage />,
       },
       {
         path: "attendance/stats",
@@ -156,7 +160,7 @@ export const routesConfig = [
       // ========== REPORTES ==========
       {
         path: "reports/students",
-        element: <PlaceholderPage title="Reportes por Estudiante" />,
+        element: <AttendanceStudentPage />,
       },
       {
         path: "reports/courses",
@@ -196,6 +200,10 @@ export const routesConfig = [
         element: <CourseDetailPage />,
       },
       {
+        path: "course-detail",
+        element: <TeacherCourseDetailSelector />,
+      },
+      {
         path: "courses/students",
         element: <PlaceholderPage title="Estudiantes Inscritos" />,
       },
@@ -211,7 +219,7 @@ export const routesConfig = [
       // Asistencia
       {
         path: "attendance",
-        element: <PlaceholderPage title="Registrar Asistencia" />,
+        element: <AttendanceRecordPage />,
       },
       {
         path: "attendance/history",
@@ -271,11 +279,11 @@ export const routesConfig = [
       // Asistencia
       {
         path: "attendance",
-        element: <PlaceholderPage title="Mi Historial de Asistencia" />,
+        element: <AttendanceStudentPage />,
       },
       {
         path: "attendance/report",
-        element: <PlaceholderPage title="Reporte para Padres" />,
+        element: <AttendanceStudentPage />,
       },
       // Reservas
       {
@@ -311,7 +319,7 @@ export const routesConfig = [
     ],
   },
 
-  // 404
+  // ========== 404 NOT FOUND ==========
   {
     path: "*",
     element: (
