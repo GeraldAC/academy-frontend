@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ClipboardCheck, Calendar, Users, CheckCircle, XCircle } from "lucide-react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useCourses } from "@/features/courses/hooks/useCourses";
@@ -10,20 +10,47 @@ const AttendanceRecordPage = () => {
   const { courses, isLoadingCourses } = useCourses();
   const [selectedCourse, setSelectedCourse] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split("T")[0]);
-  const [attendanceData, setAttendanceData] = useState<Map<string, boolean>>(new Map());
 
-  const { students, isLoadingStudents, registerAttendance, isRegistering } = useAttendance(
-    selectedCourse,
-    selectedDate
-  );
+  type AttendanceStatus = "PRESENT" | "ABSENT" | "PERMISSION";
+  const [attendanceData, setAttendanceData] = useState<Map<string, AttendanceStatus>>(new Map());
 
-  // Filtrar cursos del docente
-  const myCourses = courses?.filter((course) => course.teacherId === user?.id) || [];
+  const {
+    students,
+    isLoadingStudents,
+    registerAttendance,
+    isRegistering,
+    courseAttendance,
+    isLoadingCourseAttendance,
+  } = useAttendance(selectedCourse, selectedDate);
 
-  // Manejar cambio de asistencia
-  const handleToggleAttendance = (studentId: string, currentValue: boolean | null) => {
-    const newValue = currentValue === true ? false : true;
-    setAttendanceData(new Map(attendanceData.set(studentId, newValue)));
+  // Sync attendance data when courseAttendance loads
+  useEffect(() => {
+    if (courseAttendance && courseAttendance.length > 0) {
+      const initialMap = new Map<string, AttendanceStatus>();
+      courseAttendance.forEach((record) => {
+        if (record.present) {
+          initialMap.set(record.studentId, "PRESENT");
+        } else if (record.notes === "PERMISO") {
+          initialMap.set(record.studentId, "PERMISSION");
+        } else {
+          initialMap.set(record.studentId, "ABSENT");
+        }
+      });
+      setAttendanceData(initialMap);
+    } else {
+      setAttendanceData(new Map());
+    }
+  }, [courseAttendance, selectedCourse, selectedDate]);
+
+  // Filtrar cursos dependiendo del rol
+  const myCourses =
+    user?.role === "ADMIN"
+      ? courses || []
+      : courses?.filter((course) => course.teacherId === user?.id) || [];
+
+  // Cambio de estado individual
+  const handleStatusChange = (studentId: string, status: AttendanceStatus) => {
+    setAttendanceData(new Map(attendanceData.set(studentId, status)));
   };
 
   // Enviar asistencia
@@ -32,25 +59,41 @@ const AttendanceRecordPage = () => {
       return;
     }
 
-    const attendances = students.map((student) => ({
-      studentId: student.id,
-      present: attendanceData.get(student.id) ?? student.present ?? false,
-      notes: undefined,
-    }));
+    const attendances = students.map((student) => {
+      const status = attendanceData.get(student.id) ?? (student.present ? "PRESENT" : "ABSENT");
+
+      let present = false;
+      let notes: string | undefined = undefined;
+
+      if (status === "PRESENT") {
+        present = true;
+      } else if (status === "PERMISSION") {
+        present = false;
+        notes = "PERMISO";
+      } else {
+        present = false;
+      }
+
+      return {
+        studentId: student.id,
+        present,
+        notes,
+      };
+    });
 
     registerAttendance({
       courseId: selectedCourse,
-      classDate: new Date(selectedDate).toISOString(),
+      classDate: selectedDate,
       attendances,
     });
   };
 
-  // Marcar todos presentes/ausentes
-  const handleMarkAll = (present: boolean) => {
+  // Marcar todos
+  const handleMarkAll = (status: AttendanceStatus) => {
     if (!students) return;
-    const newData = new Map<string, boolean>();
+    const newData = new Map<string, AttendanceStatus>();
     students.forEach((student) => {
-      newData.set(student.id, present);
+      newData.set(student.id, status);
     });
     setAttendanceData(newData);
   };
@@ -118,36 +161,50 @@ const AttendanceRecordPage = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleMarkAll(true)}
+                  onClick={() => handleMarkAll("PRESENT")}
                   disabled={isLoadingStudents}
                 >
-                  <CheckCircle className="w-4 h-4 mr-1" />
+                  <CheckCircle className="w-4 h-4 mr-1 text-green-500" />
                   Todos Presentes
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleMarkAll(false)}
+                  onClick={() => handleMarkAll("PERMISSION")}
                   disabled={isLoadingStudents}
                 >
-                  <XCircle className="w-4 h-4 mr-1" />
+                  <ClipboardCheck className="w-4 h-4 mr-1 text-orange-500" />
+                  Todos Permiso
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleMarkAll("ABSENT")}
+                  disabled={isLoadingStudents}
+                >
+                  <XCircle className="w-4 h-4 mr-1 text-red-500" />
                   Todos Ausentes
                 </Button>
               </div>
             </div>
 
-            {isLoadingStudents ? (
+            {isLoadingStudents || isLoadingCourseAttendance ? (
               <div className="text-center py-8 text-gray-500">Cargando estudiantes...</div>
             ) : students && students.length > 0 ? (
               <>
                 <div className="space-y-2 mb-6">
                   {students.map((student) => {
-                    const isPresent = attendanceData.get(student.id) ?? student.present ?? false;
+                    const status =
+                      attendanceData.get(student.id) ?? (student.present ? "PRESENT" : "ABSENT");
                     return (
                       <div
                         key={student.id}
                         className={`flex items-center justify-between p-4 border rounded-lg transition-colors ${
-                          isPresent ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"
+                          status === "PRESENT"
+                            ? "border-green-200 bg-green-50"
+                            : status === "PERMISSION"
+                              ? "border-orange-200 bg-orange-50"
+                              : "border-red-200 bg-red-50"
                         }`}
                       >
                         <div className="flex-1">
@@ -158,26 +215,41 @@ const AttendanceRecordPage = () => {
                             DNI: {student.dni} • {student.email}
                           </p>
                         </div>
-                        <button
-                          onClick={() => handleToggleAttendance(student.id, isPresent)}
-                          className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-                            isPresent
-                              ? "bg-green-500 hover:bg-green-600 text-white"
-                              : "bg-red-500 hover:bg-red-600 text-white"
-                          }`}
-                        >
-                          {isPresent ? (
-                            <>
-                              <CheckCircle className="w-4 h-4 inline mr-1" />
-                              Presente
-                            </>
-                          ) : (
-                            <>
-                              <XCircle className="w-4 h-4 inline mr-1" />
-                              Ausente
-                            </>
-                          )}
-                        </button>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleStatusChange(student.id, "PRESENT")}
+                            className={`p-2 rounded-lg transition-colors ${
+                              status === "PRESENT"
+                                ? "bg-green-500 text-white"
+                                : "bg-gray-100 text-gray-400 hover:bg-green-100 hover:text-green-500"
+                            }`}
+                            title="Presente"
+                          >
+                            <CheckCircle className="w-5 h-5" />
+                          </button>
+                          <button
+                            onClick={() => handleStatusChange(student.id, "PERMISSION")}
+                            className={`p-2 rounded-lg transition-colors ${
+                              status === "PERMISSION"
+                                ? "bg-orange-500 text-white"
+                                : "bg-gray-100 text-gray-400 hover:bg-orange-100 hover:text-orange-500"
+                            }`}
+                            title="Permiso"
+                          >
+                            <ClipboardCheck className="w-5 h-5" />
+                          </button>
+                          <button
+                            onClick={() => handleStatusChange(student.id, "ABSENT")}
+                            className={`p-2 rounded-lg transition-colors ${
+                              status === "ABSENT"
+                                ? "bg-red-500 text-white"
+                                : "bg-gray-100 text-gray-400 hover:bg-red-100 hover:text-red-500"
+                            }`}
+                            title="Ausente"
+                          >
+                            <XCircle className="w-5 h-5" />
+                          </button>
+                        </div>
                       </div>
                     );
                   })}

@@ -20,7 +20,16 @@ import {
   Alert,
   AlertIcon,
   AlertDescription,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Avatar,
 } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
+import { enrollmentsService } from "@/features/enrollments/services/api";
 import { ArrowBackIcon, CalendarIcon } from "@chakra-ui/icons";
 import { useCourse } from "../hooks/useCourses";
 
@@ -37,6 +46,12 @@ export default function CourseDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data: course, isLoading, error } = useCourse(id || "");
+
+  const { data: enrollments, isLoading: isLoadingEnrollments } = useQuery({
+    queryKey: ["enrollments", id],
+    queryFn: () => enrollmentsService.getEnrollmentsByCourse(id!),
+    enabled: !!id,
+  });
 
   if (isLoading) {
     return (
@@ -191,20 +206,81 @@ export default function CourseDetailPage() {
         </Card>
       )}
 
-      {/* Sección de estudiantes (placeholder para después) */}
-      <Card mt={6} bg="gray.50">
+      {/* Sección de estudiantes */}
+      <Card mt={6}>
         <CardBody>
-          <HStack justify="space-between">
+          <HStack justify="space-between" mb={4}>
             <VStack align="start" spacing={1}>
               <Heading size="md">Estudiantes Inscritos</Heading>
               <Text color="gray.600" fontSize="sm">
                 Lista de estudiantes matriculados en este curso
               </Text>
             </VStack>
-            <Badge colorScheme="yellow" fontSize="sm">
-              Próximamente
+            <Badge colorScheme="blue" fontSize="md">
+              {enrollments?.length || 0} Estudiantes
             </Badge>
           </HStack>
+
+          {isLoadingEnrollments ? (
+            <Box textAlign="center" py={4}>
+              <Spinner />
+              <Text mt={2}>Cargando estudiantes...</Text>
+            </Box>
+          ) : enrollments && enrollments.length > 0 ? (
+            <Box overflowX="auto">
+              <Table variant="simple">
+                <Thead>
+                  <Tr>
+                    <Th>Estudiante</Th>
+                    <Th>Email</Th>
+                    <Th>DNI</Th>
+                    <Th>Estado</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {enrollments.map((enrollment) => (
+                    <Tr key={enrollment.id}>
+                      <Td>
+                        <HStack>
+                          <Avatar
+                            size="sm"
+                            name={`${enrollment.student.firstName} ${enrollment.student.lastName}`}
+                          />
+                          <Text fontWeight="medium">
+                            {enrollment.student.firstName} {enrollment.student.lastName}
+                          </Text>
+                        </HStack>
+                      </Td>
+                      <Td>{enrollment.student.email}</Td>
+                      <Td>{enrollment.student.dni}</Td>
+                      <Td>
+                        <Badge
+                          colorScheme={
+                            enrollment.status === "ACTIVE"
+                              ? "green"
+                              : enrollment.status === "COMPLETED"
+                                ? "blue"
+                                : "red"
+                          }
+                        >
+                          {enrollment.status === "ACTIVE"
+                            ? "Activo"
+                            : enrollment.status === "COMPLETED"
+                              ? "Completado"
+                              : "Cancelado"}
+                        </Badge>
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Box>
+          ) : (
+            <Alert status="info" mt={2}>
+              <AlertIcon />
+              No hay estudiantes inscritos en este curso aún.
+            </Alert>
+          )}
         </CardBody>
       </Card>
     </Box>

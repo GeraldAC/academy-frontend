@@ -133,7 +133,12 @@ export const useCourses = (filters?: CourseFilters) => {
     isDeactivating: deactivateCourseMutation.isPending,
   };
 };
-
+export const useStudentCourses = () => {
+  return useQuery({
+    queryKey: ["student-courses"],
+    queryFn: () => coursesService.getStudentCourses(),
+  });
+};
 export const useCourse = (id: string) => {
   return useQuery({
     queryKey: ["courses", id],

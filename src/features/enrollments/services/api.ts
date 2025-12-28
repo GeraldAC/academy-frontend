@@ -42,4 +42,10 @@ export const enrollmentsService = {
   async cancelEnrollment(enrollmentId: string): Promise<void> {
     await axios.delete(`/enrollments/${enrollmentId}`);
   },
+
+  // Obtener mis matrículas (Estudiante)
+  async getMyEnrollments(): Promise<Enrollment[]> {
+    const { data } = await axios.get<Enrollment[]>("/enrollments/my-enrollments");
+    return data;
+  },
 };

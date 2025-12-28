@@ -40,6 +40,10 @@ const TeacherCourseDetailSelector = lazy(
 
 // Student Pages
 const StudentDashboard = lazy(() => import("@/pages/student/DashboardPage"));
+const StudentCoursesPage = lazy(() => import("@/features/courses/pages/StudentCoursesPage"));
+const StudentCourseDetailPage = lazy(
+  () => import("@/features/courses/pages/StudentCourseDetailPage")
+);
 
 // Shared Pages
 const ProfilePage = lazy(() => import("@/features/users/pages/ProfilePage"));
@@ -52,6 +56,8 @@ const AttendanceRecordPage = lazy(() => import("@/features/attendance/pages/Atte
 const AttendanceStudentPage = lazy(
   () => import("@/features/attendance/pages/AttendanceStudentPage")
 );
+const AttendanceStatsPage = lazy(() => import("@/features/attendance/pages/AttendanceStatsPage"));
+const AttendanceReportPage = lazy(() => import("@/features/attendance/pages/AttendanceReportPage"));
 
 // ==================== ROUTES CONFIG ====================
 export const routesConfig: RouteObject[] = [
@@ -142,7 +148,7 @@ export const routesConfig: RouteObject[] = [
       },
       {
         path: "attendance/stats",
-        element: <PlaceholderPage title="Estadísticas de Asistencia" />,
+        element: <AttendanceStatsPage />,
       },
       // ========== PAGOS ==========
       {
@@ -160,15 +166,15 @@ export const routesConfig: RouteObject[] = [
       // ========== REPORTES ==========
       {
         path: "reports/students",
-        element: <AttendanceStudentPage />,
+        element: <AttendanceReportPage initialMode="student" />,
       },
       {
         path: "reports/courses",
-        element: <PlaceholderPage title="Reportes por Curso" />,
+        element: <AttendanceReportPage initialMode="course" />,
       },
       {
         path: "reports/analytics",
-        element: <PlaceholderPage title="Analíticas Generales" />,
+        element: <AttendanceStatsPage />,
       },
     ],
   },
@@ -226,8 +232,12 @@ export const routesConfig: RouteObject[] = [
         element: <PlaceholderPage title="Historial de Asistencia" />,
       },
       {
+        path: "attendance/stats",
+        element: <AttendanceStatsPage />,
+      },
+      {
         path: "attendance/reports",
-        element: <PlaceholderPage title="Reportes por Curso" />,
+        element: <AttendanceReportPage initialMode="course" />,
       },
       // Reservas
       {
@@ -261,11 +271,11 @@ export const routesConfig: RouteObject[] = [
       // Cursos
       {
         path: "courses",
-        element: <PlaceholderPage title="Cursos Inscritos" />,
+        element: <StudentCoursesPage />,
       },
       {
-        path: "courses/detail",
-        element: <PlaceholderPage title="Detalles de Curso" />,
+        path: "courses/:id",
+        element: <StudentCourseDetailPage />,
       },
       // Horario
       {

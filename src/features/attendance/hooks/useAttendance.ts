@@ -1,6 +1,7 @@
 // src/features/attendance/hooks/useAttendance.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { attendanceService } from "../services/api";
+import { enrollmentsService } from "@/features/enrollments/services/api";
 import { useToast } from "@chakra-ui/react";
 import type { RegisterAttendanceDto, AttendanceReportQuery } from "../types/types";
 
@@ -8,11 +9,22 @@ export const useAttendance = (courseId?: string, classDate?: string) => {
   const queryClient = useQueryClient();
   const toast = useToast();
 
-  // Query: Obtener estudiantes para registrar asistencia
+  // Query: Obtener estudiantes desde matriculas (para el roster)
   const studentsQuery = useQuery({
-    queryKey: ["attendance-students", courseId, classDate],
-    queryFn: () => attendanceService.getStudentsForAttendance(courseId!, classDate!),
-    enabled: !!courseId && !!classDate,
+    queryKey: ["enrollment-students", courseId],
+    queryFn: async () => {
+      const enrollments = await enrollmentsService.getEnrollmentsByCourse(courseId!);
+      // Mapear enrollment a estructura de estudiante compatible
+      return enrollments.map((e) => ({
+        id: e.studentId, // ID del estudiante
+        firstName: e.student.firstName,
+        lastName: e.student.lastName,
+        email: e.student.email,
+        dni: e.student.dni,
+        present: false, // Default state
+      }));
+    },
+    enabled: !!courseId,
   });
 
   // Query: Obtener asistencia por curso
@@ -37,11 +49,16 @@ export const useAttendance = (courseId?: string, classDate?: string) => {
       });
     },
     onError: (error: any) => {
+      console.error("Error registering attendance:", error);
+      const errorMsg =
+        error.response?.data?.message ||
+        JSON.stringify(error.response?.data) ||
+        "No se pudo registrar la asistencia";
       toast({
         title: "Error al registrar asistencia",
-        description: error.response?.data?.message || "No se pudo registrar la asistencia",
+        description: errorMsg,
         status: "error",
-        duration: 5000,
+        duration: 8000,
         isClosable: true,
       });
     },

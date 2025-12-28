@@ -14,7 +14,13 @@ export const attendanceService = {
   async registerAttendance(
     data: RegisterAttendanceDto
   ): Promise<{ message: string; count: number; data: Attendance[] }> {
-    const { data: response } = await axios.post("/attendance/bulk", data);
+    // Backend espera 'records' en lugar de 'attendances'
+    const payload = {
+      courseId: data.courseId,
+      classDate: data.classDate,
+      records: data.attendances,
+    };
+    const { data: response } = await axios.post("/attendance", payload);
     return response;
   },
 
@@ -50,6 +56,16 @@ export const attendanceService = {
     const { data } = await axios.get(`/attendance/student/${studentId}/stats`, {
       params: courseId ? { courseId } : undefined,
     });
+    return data;
+  },
+
+  // Obtener estadísticas generales (Admin/Docente)
+  async getStats(query?: {
+    courseId?: string;
+    startDate?: string;
+    endDate?: string;
+  }): Promise<AttendanceStats> {
+    const { data } = await axios.get("/attendance/stats", { params: query });
     return data;
   },
 
