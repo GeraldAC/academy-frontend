@@ -4,6 +4,7 @@ export interface AvailableUser {
   lastName: string;
   email: string;
   isActive: boolean;
+  dni?: string;
 }
 
 export interface Teacher {
