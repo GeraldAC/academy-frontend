@@ -8,6 +8,8 @@ interface CapacityBadgeProps {
 export const CapacityBadge = ({ available, total }: CapacityBadgeProps) => {
   const percentage = (available / total) * 100;
 
+  console.log({ available, total, percentage });
+
   const getColorScheme = () => {
     if (available === 0) return "red";
     if (percentage <= 20) return "orange";

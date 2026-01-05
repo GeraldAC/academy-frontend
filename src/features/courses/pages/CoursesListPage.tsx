@@ -58,7 +58,7 @@ const CoursesListPage = () => {
   const filters: CourseFilters = {
     search: debouncedSearch || undefined,
     subject: subjectFilter || undefined,
-    isActive: activeFilter as "true" | "false" | undefined,
+    isActive: (activeFilter as "true" | "false" | "") || undefined,
   };
 
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
@@ -75,6 +75,8 @@ const CoursesListPage = () => {
     subjects,
     isLoadingSubjects,
   } = useCourses(filters);
+
+  console.log({ courses });
 
   // Diferenciamos carga inicial (primera vez sin datos) vs refetching
   const isInitialLoading = coursesQuery.isLoading && !coursesQuery.data;
@@ -334,7 +336,7 @@ const CoursesListPage = () => {
                     </Td>
                     <Td>
                       <Badge
-                        colorScheme={course.isActive ? "green" : "gray"}
+                        colorScheme={course.isActive ? "green" : "pink"}
                         variant="subtle"
                         px={3}
                         py={1}
