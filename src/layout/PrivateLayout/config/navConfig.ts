@@ -34,7 +34,7 @@ export const adminNavItems: NavItem[] = [
     children: [
       { label: "Lista de Usuarios", path: "/admin/usuarios" },
       { label: "Crear Usuario", path: "/admin/usuarios/crear" },
-      { label: "Perfil de Usuario", path: "/admin/usuarios/perfil" },
+      //{ label: "Perfil de Usuario", path: "/admin/usuarios/perfil" },
     ],
   },
   {
@@ -92,8 +92,8 @@ export const teacherNavItems: NavItem[] = [
     icon: FiBookOpen,
     children: [
       { label: "Lista de Cursos Asignados", path: "/teacher/courses" },
-      { label: "Detalle de Curso", path: "/teacher/course-detail" },
-      { label: "Estudiantes Inscritos", path: "/teacher/courses/students" },
+      //{ label: "Detalle de Curso", path: "/teacher/course-detail" },
+      //{ label: "Estudiantes Inscritos", path: "/teacher/courses/students" },
     ],
   },
   {
@@ -139,7 +139,7 @@ export const studentNavItems: NavItem[] = [
     icon: FiBookOpen,
     children: [
       { label: "Cursos Inscritos", path: "/student/courses" },
-      { label: "Detalles de Curso", path: "/student/courses/detail" },
+      //{ label: "Detalles de Curso", path: "/student/courses/detail" },
     ],
   },
   {

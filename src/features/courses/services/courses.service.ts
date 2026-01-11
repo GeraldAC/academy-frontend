@@ -60,4 +60,8 @@ export const coursesService = {
     const { data } = await axios.get<MyCoursesResponse>("/courses/my-courses");
     return data;
   },
+  async getStudentCourses(): Promise<MyCoursesResponse> {
+    const { data } = await axios.get<MyCoursesResponse>("/courses/student-courses");
+    return data;
+  },
 };
