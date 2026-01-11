@@ -20,6 +20,7 @@ import { ClassReservationsPage } from "@/features/reservations/pages/ClassReserv
 import { RegisterPaymentPage } from "@/features/reservations/pages/RegisterPaymentPage";
 import { PaymentsListPage } from "@/features/reservations/pages/PaymentsListPage";
 
+import StudentHistoryPage from "@/features/attendance/pages/StudentHistoryPage";
 // Public Pages
 const LoginPage = lazy(() => import("@/features/auth/pages/LoginPage"));
 const LandingPage = lazy(() => import("@/pages/LandingPage"));
@@ -242,7 +243,7 @@ export const routesConfig: RouteObject[] = [
       },
       {
         path: "attendance/history",
-        element: <PlaceholderPage title="Historial de Asistencia" />,
+        element: <StudentHistoryPage />,
       },
       {
         path: "attendance/stats",

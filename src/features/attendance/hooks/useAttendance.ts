@@ -13,47 +13,61 @@ export const useAttendance = (courseId?: string, classDate?: string) => {
   const studentsQuery = useQuery({
     queryKey: ["enrollment-students", courseId],
     queryFn: async () => {
-      const enrollments = await enrollmentsService.getEnrollmentsByCourse(courseId!);
+      if (!courseId) return [];
+
+      const enrollments = await enrollmentsService.getEnrollmentsByCourse(courseId);
+
       // Mapear enrollment a estructura de estudiante compatible
       return enrollments.map((e) => ({
-        id: e.studentId, // ID del estudiante
+        id: e.studentId,
         firstName: e.student.firstName,
         lastName: e.student.lastName,
         email: e.student.email,
         dni: e.student.dni,
-        present: false, // Default state
+        present: false, // Default - será sobrescrito por courseAttendance si existe
       }));
     },
     enabled: !!courseId,
   });
 
-  // Query: Obtener asistencia por curso
+  // Query: Obtener asistencia por curso y fecha
   const courseAttendanceQuery = useQuery({
     queryKey: ["course-attendance", courseId, classDate],
-    queryFn: () => attendanceService.getCourseAttendance(courseId!, classDate),
+    queryFn: () => {
+      if (!courseId) return [];
+      return attendanceService.getCourseAttendance(courseId, classDate);
+    },
     enabled: !!courseId,
   });
 
   // Mutation: Registrar asistencia
   const registerMutation = useMutation({
     mutationFn: (data: RegisterAttendanceDto) => attendanceService.registerAttendance(data),
-    onSuccess: (response) => {
-      queryClient.invalidateQueries({ queryKey: ["attendance-students"] });
+    onSuccess: (response, variables) => {
+      // Invalidar todas las queries relacionadas
+      queryClient.invalidateQueries({ queryKey: ["enrollment-students"] });
       queryClient.invalidateQueries({ queryKey: ["course-attendance"] });
+      queryClient.invalidateQueries({ queryKey: ["attendance-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["student-attendance-history"] });
+      queryClient.invalidateQueries({ queryKey: ["student-attendance-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["attendance-report"] });
+
       toast({
-        title: "Asistencia registrada",
-        description: response.message || `${response.count} registros guardados exitosamente`,
+        title: "✅ Asistencia registrada",
+        description: `${response.count} registros guardados exitosamente para ${variables.classDate}`,
         status: "success",
         duration: 3000,
         isClosable: true,
       });
     },
     onError: (error: any) => {
-      console.error("Error registering attendance:", error);
+      console.error("❌ Error registering attendance:", error);
       const errorMsg =
         error.response?.data?.message ||
+        error.response?.data?.error ||
         JSON.stringify(error.response?.data) ||
         "No se pudo registrar la asistencia";
+
       toast({
         title: "Error al registrar asistencia",
         description: errorMsg,
@@ -69,10 +83,15 @@ export const useAttendance = (courseId?: string, classDate?: string) => {
     mutationFn: ({ id, present, notes }: { id: string; present: boolean; notes?: string }) =>
       attendanceService.updateAttendance(id, present, notes),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["attendance-students"] });
+      // Invalidar todas las queries relacionadas
+      queryClient.invalidateQueries({ queryKey: ["enrollment-students"] });
       queryClient.invalidateQueries({ queryKey: ["course-attendance"] });
+      queryClient.invalidateQueries({ queryKey: ["attendance-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["student-attendance-history"] });
+      queryClient.invalidateQueries({ queryKey: ["student-attendance-stats"] });
+
       toast({
-        title: "Asistencia actualizada",
+        title: "✅ Asistencia actualizada",
         status: "success",
         duration: 2000,
         isClosable: true,
@@ -104,28 +123,60 @@ export const useAttendance = (courseId?: string, classDate?: string) => {
   };
 };
 
-// Hook para estudiantes
-export const useStudentAttendance = (studentId: string, courseId?: string) => {
+// Hook para estudiantes (con soporte para filtros de fecha)
+export const useStudentAttendance = (
+  studentId: string,
+  courseId?: string,
+  startDate?: string,
+  endDate?: string
+) => {
   const queryClient = useQueryClient();
 
   // Query: Historial de asistencia
   const historyQuery = useQuery({
-    queryKey: ["student-attendance-history", studentId, courseId],
+    queryKey: ["student-attendance-history", studentId, courseId, startDate, endDate],
     queryFn: () => attendanceService.getStudentHistory(studentId, courseId),
     enabled: !!studentId,
+    // Refrescar automáticamente para ver nuevos registros
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
   });
 
   // Query: Estadísticas
   const statsQuery = useQuery({
-    queryKey: ["student-attendance-stats", studentId, courseId],
+    queryKey: ["student-attendance-stats", studentId, courseId, startDate, endDate],
     queryFn: () => attendanceService.getStudentStats(studentId, courseId),
     enabled: !!studentId,
+    // Refrescar automáticamente para ver nuevas estadísticas
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
   });
 
+  // Filtrar historial por rango de fechas (si los filtros están presentes)
+  const filteredHistory = historyQuery.data?.filter((record) => {
+    const recordDate = new Date(record.classDate);
+    const isAfterStart = !startDate || recordDate >= new Date(startDate);
+    const isBeforeEnd = !endDate || recordDate <= new Date(endDate);
+    return isAfterStart && isBeforeEnd;
+  });
+
+  // Recalcular estadísticas basadas en el historial filtrado
+  const filteredStats = filteredHistory
+    ? {
+        totalClasses: filteredHistory.length,
+        presentClasses: filteredHistory.filter((r) => r.present).length,
+        absentClasses: filteredHistory.filter((r) => !r.present).length,
+        attendanceRate:
+          filteredHistory.length > 0
+            ? (filteredHistory.filter((r) => r.present).length / filteredHistory.length) * 100
+            : 0,
+      }
+    : statsQuery.data;
+
   return {
-    history: historyQuery.data,
+    history: filteredHistory || historyQuery.data,
     isLoadingHistory: historyQuery.isLoading,
-    stats: statsQuery.data,
+    stats: startDate || endDate ? filteredStats : statsQuery.data,
     isLoadingStats: statsQuery.isLoading,
     refetch: () => {
       queryClient.invalidateQueries({ queryKey: ["student-attendance-history"] });
