@@ -13,6 +13,11 @@ import { GuestRoute } from "./GuestRoute";
 
 // Dummy Page
 import { PlaceholderPage } from "@/components/common/PlaceholderPage";
+import { ReservationPage } from "@/features/reservations/pages/ReservationPage";
+import { MyReservationsPage } from "@/features/reservations/pages/MyReservationsPage";
+import { ClassReservationsPage } from "@/features/reservations/pages/ClassReservationsPage";
+import { RegisterPaymentPage } from "@/features/reservations/pages/RegisterPaymentPage";
+import { PaymentsListPage } from "@/features/reservations/pages/PaymentsListPage";
 
 // Public Pages
 const LoginPage = lazy(() => import("@/features/auth/pages/LoginPage"));
@@ -134,7 +139,7 @@ export const routesConfig = [
       },
       {
         path: "courses/schedules",
-        element: <ScheduleManagementPage/>,
+        element: <ScheduleManagementPage />,
       },
       // ========== ASISTENCIA ==========
       {
@@ -157,6 +162,14 @@ export const routesConfig = [
       {
         path: "payments/reports",
         element: <PlaceholderPage title="Reportes Financieros" />,
+      },
+      {
+        path: "reservation/payments",
+        element: <PaymentsListPage />,
+      },
+      {
+        path: "reservation/payments/create",
+        element: <RegisterPaymentPage />,
       },
       // ========== REPORTES ==========
       {
@@ -233,7 +246,7 @@ export const routesConfig = [
       // Reservas
       {
         path: "bookings",
-        element: <PlaceholderPage title="Clases de Reforzamiento" />,
+        element: <ClassReservationsPage />,
       },
       {
         path: "bookings/students",
@@ -289,11 +302,11 @@ export const routesConfig = [
       // Reservas
       {
         path: "bookings",
-        element: <PlaceholderPage title="Reservar Clases" />,
+        element: <ReservationPage />,
       },
       {
         path: "bookings/my-bookings",
-        element: <PlaceholderPage title="Mis Reservas" />,
+        element: <MyReservationsPage />,
       },
       {
         path: "bookings/cancel",

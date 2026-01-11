@@ -61,6 +61,8 @@ export const adminNavItems: NavItem[] = [
       { label: "Lista de Pagos", path: "/admin/payments" },
       { label: "Registrar Pago", path: "/admin/payments/create" },
       { label: "Reportes Financieros", path: "/admin/payments/reports" },
+      { label: "Pagos de Reservas", path: "/admin/reservation/payments" },
+      { label: "Pagar Reserva", path: "/admin/reservation/payments/create" },
     ],
   },
   {
