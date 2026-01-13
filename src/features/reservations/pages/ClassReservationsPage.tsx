@@ -27,6 +27,8 @@ export const ClassReservationsPage = () => {
     queryFn: reservationsApi.getAllTeacherReservations,
   });
 
+  console.log({ reservations });
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("es-ES", {
       weekday: "long",

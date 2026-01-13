@@ -49,13 +49,15 @@ export const ReservationPage = () => {
   console.log({ enrollments });
 
   // Filtrar solo cursos activos con horarios de reforzamiento
-  const availableCourses = enrollments?.filter(
-    (enrollment) =>
-      enrollment.status === "ACTIVE" &&
-      enrollment.course?.schedules?.some(
-        (schedule) => schedule.classType === "REINFORCEMENT" && schedule.isActive
-      )
-  );
+  // const availableCourses = enrollments?.filter(
+  //   (enrollment) =>
+  //     enrollment.status === "ACTIVE" &&
+  //     enrollment.course?.schedules?.some(
+  //       (schedule) => schedule.classType === "REINFORCEMENT" && schedule.isActive
+  //     )
+  // );
+
+  const availableCourses = enrollments;
 
   const createReservationMutation = useMutation({
     mutationFn: reservationsApi.create,

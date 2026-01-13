@@ -1,6 +1,6 @@
 // src/app/router/routesConfig.tsx
 import { lazy } from "react";
-import type { RouteObject } from "react-router-dom";
+// import type { RouteObject } from "react-router-dom";
 
 // Layouts
 import { PublicLayout } from "@/layout/PublicLayout";
@@ -40,9 +40,9 @@ const ScheduleManagementPage = lazy(() => import("@/pages/admin/ScheduleManageme
 const TeacherDashboard = lazy(() => import("@/pages/teacher/DashboardPage"));
 const MyCoursesPage = lazy(() => import("@/features/courses/pages/MyCoursesPage"));
 const CourseDetailPage = lazy(() => import("@/features/courses/pages/CourseDetailPage"));
-const TeacherCourseDetailSelector = lazy(
-  () => import("@/features/courses/pages/TeacherCourseDetailSelector")
-);
+// const TeacherCourseDetailSelector = lazy(
+//   () => import("@/features/courses/pages/TeacherCourseDetailSelector")
+// );
 
 // Student Pages
 const StudentDashboard = lazy(() => import("@/pages/student/DashboardPage"));
@@ -63,7 +63,6 @@ const AttendanceStudentPage = lazy(
 );
 const AttendanceStatsPage = lazy(() => import("@/features/attendance/pages/AttendanceStatsPage"));
 const AttendanceReportPage = lazy(() => import("@/features/attendance/pages/AttendanceReportPage"));
-
 
 export const routesConfig = [
   // Rutas públicas

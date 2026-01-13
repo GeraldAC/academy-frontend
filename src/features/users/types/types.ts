@@ -41,17 +41,17 @@ export interface UsersListResponse {
   limit: number;
 }
 
-
 // ========== HORARIOS (NUEVOS) ==========
 
 export interface Schedule {
   id: string;
   courseId: string;
   teacherId: string;
-  dayOfWeek: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
+  dayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
   startTime: string;
   endTime: string;
-  
+  classroom?: string;
+
   course?: {
     id: number;
     name: string;
@@ -68,11 +68,12 @@ export interface Schedule {
 }
 
 export interface CreateScheduleRequest {
-  courseId: string;
-  teacherId: string;
-  dayOfWeek: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
+  courseId: string | number;
+  teacherId: string | number;
+  dayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
   startTime: string;
   endTime: string;
+  classroom?: string;
 }
 
 export interface Course {

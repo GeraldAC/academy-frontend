@@ -21,21 +21,26 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import { Plus, Calendar, Trash2, Edit, Clock, MapPin, User as UserIcon } from "lucide-react";
-import { getSchedules, getCourses, getTeachers, deleteSchedule } from "@/features/users/services/api";
-import type { Schedule, Course, User } from "@/features/users/types/types";
+import {
+  getSchedules,
+  getCourses,
+  getTeachers,
+  deleteSchedule,
+} from "@/features/users/services/api";
+import type { Schedule } from "@/features/users/types/types";
 import CreateScheduleModal from "./components/CreateScheduleModal";
 
 const DAYS_MAP = {
-  MONDAY: 'Lunes',
-  TUESDAY: 'Martes',
-  WEDNESDAY: 'Miércoles',
-  THURSDAY: 'Jueves',
-  FRIDAY: 'Viernes',
-  SATURDAY: 'Sábado',
-  SUNDAY: 'Domingo',
+  MONDAY: "Lunes",
+  TUESDAY: "Martes",
+  WEDNESDAY: "Miércoles",
+  THURSDAY: "Jueves",
+  FRIDAY: "Viernes",
+  SATURDAY: "Sábado",
+  SUNDAY: "Domingo",
 };
 
-const DAYS_ORDER = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+const DAYS_ORDER = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"];
 
 export default function ScheduleManagementPage() {
   const toast = useToast();
@@ -54,7 +59,7 @@ export default function ScheduleManagementPage() {
         dayOfWeek: selectedDay !== "all" ? selectedDay : undefined,
         courseId: selectedCourse !== "all" ? Number(selectedCourse) : undefined,
       });
-      console.log('[DEBUG] schedulesData from API:', result);
+      console.log("[DEBUG] schedulesData from API:", result);
       return result;
     },
   });
@@ -121,17 +126,21 @@ export default function ScheduleManagementPage() {
   };
 
   // Organizar horarios por día
-  const schedulesByDay = schedulesData?.data.reduce((acc, schedule) => {
-    const dayKey = (schedule as any).weekDay || schedule.dayOfWeek; // Handle both field names
-    if (!acc[dayKey]) {
-      acc[dayKey] = [];
-    }
-    acc[dayKey].push(schedule);
-    return acc;
-  }, {} as Record<string, Schedule[]>) || {};
+  const schedulesByDay =
+    schedulesData?.data.reduce(
+      (acc, schedule) => {
+        const dayKey = (schedule as any).weekDay || schedule.dayOfWeek; // Handle both field names
+        if (!acc[dayKey]) {
+          acc[dayKey] = [];
+        }
+        acc[dayKey].push(schedule);
+        return acc;
+      },
+      {} as Record<string, Schedule[]>
+    ) || {};
 
   // Ordenar horarios por hora de inicio
-  Object.keys(schedulesByDay).forEach(day => {
+  Object.keys(schedulesByDay).forEach((day) => {
     schedulesByDay[day].sort((a, b) => a.startTime.localeCompare(b.startTime));
   });
 
@@ -145,9 +154,7 @@ export default function ScheduleManagementPage() {
           <Heading size="lg" mb={2} color="gray.800">
             Gestión de Horarios
           </Heading>
-          <Text color="gray.600">
-            Programa y administra los horarios de los cursos
-          </Text>
+          <Text color="gray.600">Programa y administra los horarios de los cursos</Text>
         </Box>
         <Button
           leftIcon={<Plus size={20} />}
@@ -174,7 +181,9 @@ export default function ScheduleManagementPage() {
               >
                 <option value="all">Todos los días</option>
                 {Object.entries(DAYS_MAP).map(([key, value]) => (
-                  <option key={key} value={key}>{value}</option>
+                  <option key={key} value={key}>
+                    {value}
+                  </option>
                 ))}
               </Select>
             </Box>
@@ -183,10 +192,7 @@ export default function ScheduleManagementPage() {
               <Text fontSize="sm" fontWeight="medium" mb={2} color="gray.700">
                 Filtrar por curso
               </Text>
-              <Select
-                value={selectedCourse}
-                onChange={(e) => setSelectedCourse(e.target.value)}
-              >
+              <Select value={selectedCourse} onChange={(e) => setSelectedCourse(e.target.value)}>
                 <option value="all">Todos los cursos</option>
                 {courses.map((course) => (
                   <option key={course.id} value={course.id}>
@@ -230,7 +236,7 @@ export default function ScheduleManagementPage() {
                       {DAYS_MAP[day as keyof typeof DAYS_MAP]}
                     </Heading>
                     <Badge ml="auto" colorScheme="blue">
-                      {daySchedules.length} {daySchedules.length === 1 ? 'clase' : 'clases'}
+                      {daySchedules.length} {daySchedules.length === 1 ? "clase" : "clases"}
                     </Badge>
                   </Flex>
 
@@ -275,7 +281,7 @@ export default function ScheduleManagementPage() {
                                   size="sm"
                                   variant="ghost"
                                   colorScheme="red"
-                                  onClick={() => handleDelete(schedule.id)}
+                                  onClick={() => handleDelete(Number(schedule.id))}
                                   isLoading={deleteMutation.isPending}
                                 />
                               </Flex>
@@ -296,7 +302,7 @@ export default function ScheduleManagementPage() {
                               </Flex>
                               <Flex align="center">
                                 <MapPin size={14} />
-                                <Text ml={2}>Aula: {schedule.classroom}</Text>
+                                <Text ml={2}>Aula: {schedule.classroom ?? "A01"}</Text>
                               </Flex>
                             </Flex>
                           </CardBody>

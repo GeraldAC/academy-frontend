@@ -43,8 +43,8 @@ interface CreateScheduleModalProps {
 }
 
 interface FormData {
-  courseId: number;
-  teacherId: number;
+  courseId: number | string;
+  teacherId: number | string;
   days: string[]; // Cambiado para soportar múltiples días
   startTime: string;
   endTime: string;
@@ -67,6 +67,7 @@ export default function CreateScheduleModal({
     days: [],
     startTime: "",
     endTime: "",
+    classroom: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -100,13 +101,13 @@ export default function CreateScheduleModal({
   const createMutation = useMutation({
     mutationFn: async (schedules: CreateScheduleRequest[]) => {
       // Crear todos los horarios en paralelo
-      return Promise.all(schedules.map(s => createSchedule(s)));
+      return Promise.all(schedules.map((s) => createSchedule(s)));
     },
     onSuccess: (_, schedules) => {
       const count = schedules.length;
       toast({
-        title: `${count} horario${count > 1 ? 's' : ''} creado${count > 1 ? 's' : ''}`,
-        description: `Se ${count > 1 ? 'han' : 'ha'} creado exitosamente`,
+        title: `${count} horario${count > 1 ? "s" : ""} creado${count > 1 ? "s" : ""}`,
+        description: `Se ${count > 1 ? "han" : "ha"} creado exitosamente`,
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -195,10 +196,10 @@ export default function CreateScheduleModal({
         endTime: formData.endTime,
         classroom: formData.classroom || undefined,
       };
-      updateMutation.mutate({ id: schedule.id, payload });
+      updateMutation.mutate({ id: parseInt(schedule.id), payload });
     } else {
       // Create new schedules (uno por cada día seleccionado)
-      const schedules: CreateScheduleRequest[] = formData.days.map(day => ({
+      const schedules: CreateScheduleRequest[] = formData.days.map((day) => ({
         courseId: formData.courseId,
         teacherId: formData.teacherId,
         dayOfWeek: day as any,
@@ -210,9 +211,7 @@ export default function CreateScheduleModal({
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -245,9 +244,7 @@ export default function CreateScheduleModal({
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>
-          {schedule ? "Editar Horario" : "Crear Nuevo Horario"}
-        </ModalHeader>
+        <ModalHeader>{schedule ? "Editar Horario" : "Crear Nuevo Horario"}</ModalHeader>
         <ModalCloseButton />
 
         <ModalBody>
@@ -281,7 +278,7 @@ export default function CreateScheduleModal({
               <FormLabel>Profesor</FormLabel>
               {!Array.isArray(teachers) || teachers.length === 0 ? (
                 <Text fontSize="sm" color="red.500">
-                  No hay profesores disponibles. Crea usuarios con rol "TEACHER" primero.
+                  No hay profesores disponibles. Crea usuarios con rol TEACHER primero.
                 </Text>
               ) : (
                 <Select
@@ -302,9 +299,7 @@ export default function CreateScheduleModal({
 
             {/* Days of Week - Multiple selection */}
             <FormControl isRequired isInvalid={!!errors.days}>
-              <FormLabel>
-                Días de la semana {!schedule && "(Selecciona uno o más días)"}
-              </FormLabel>
+              <FormLabel>Días de la semana {!schedule && "(Selecciona uno o más días)"}</FormLabel>
               <CheckboxGroup value={formData.days} onChange={handleDaysChange}>
                 <SimpleGrid columns={{ base: 2, sm: 3 }} spacing={2}>
                   {DAYS_OPTIONS.map((day) => (
